@@ -57,7 +57,7 @@ public class Player implements PokeAction{
     public void showCards() {
         System.out.print(String.format("player：%s cards:",this.name));
         for(PokeCard n:this.cards){
-            System.out.print(n.getValue()+" ");
+            System.out.print(n.showCard()+" ");
         }
         System.out.println();
     }
