@@ -41,7 +41,11 @@ public class Game1 implements Runnable {
         while(true){
             String in = scanner.nextLine();
             if("end".equals(in)){
-
+                List<Player> players = checkChampin();
+                players.stream().forEach(t->{
+                    System.out.println("win:" +t.getName()+" count:"+t.getSum());
+                });
+                break;
             }else{
                 try {
                     String[] ops = in.split("-");
