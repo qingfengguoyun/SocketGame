@@ -6,9 +6,11 @@ import java.util.List;
 public interface PokeAction {
     List<Integer> cards=new LinkedList<>();
 
-    public void addCard(Integer num);
+    public void addCard(PokeCard card);
 
     public boolean checkCardAmount();
 
     public Integer getSum();
+
+    public void showCards();
 }

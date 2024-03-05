@@ -1,12 +1,13 @@
 package entity;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Player implements PokeAction{
 
     Integer id;
     String name;
-    List<Integer> cards;
+    List<PokeCard> cards=new LinkedList<>();
 
     public Player(Integer id, String name) {
         this.id = id;
@@ -33,8 +34,9 @@ public class Player implements PokeAction{
     }
 
     @Override
-    public void addCard(Integer num) {
-        this.cards.add(num);
+    public void addCard(PokeCard card) {
+        this.cards.add(card);
+        showCards();
     }
 
     @Override
@@ -45,9 +47,18 @@ public class Player implements PokeAction{
     @Override
     public Integer getSum() {
         Integer sum=0;
-        for(Integer i:cards){
-            sum+=i;
+        for(PokeCard i:cards){
+            sum+=i.getValue();
         }
         return sum;
+    }
+
+    @Override
+    public void showCards() {
+        System.out.print(String.format("player：%s cards:",this.name));
+        for(PokeCard n:this.cards){
+            System.out.print(n.getValue()+" ");
+        }
+        System.out.println();
     }
 }

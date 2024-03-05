@@ -1,6 +1,7 @@
 package service;
 
 import entity.Player;
+import entity.PokeCard;
 
 import java.util.*;
 
@@ -51,6 +52,12 @@ public class Game1 implements Runnable {
                     String[] ops = in.split("-");
                     Integer id=Integer.valueOf(ops[0]);
                     Integer cardValue=Integer.valueOf(ops[1]);
+                    Player player = playerMap.get(id);
+                    if(player!=null){
+                        if(player.checkCardAmount()){
+                            player.addCard(new PokeCard(cardValue,0));
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
