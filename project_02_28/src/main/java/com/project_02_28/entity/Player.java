@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+
 public class Player extends User {
 
     private User opponent;
