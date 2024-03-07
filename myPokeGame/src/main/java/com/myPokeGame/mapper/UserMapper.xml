@@ -9,7 +9,7 @@
     </select>
 
     <select id="checkNameAndPass" resultType="com.myPokeGame.entity.User"  parameterType="com.myPokeGame.entity.User">
-        select * from user u where u.user_name = #{user.userName} and u.password= #{user.password}
+        select * from user u where u.user_name = #{userName} and u.password= #{password}
     </select>
 
 </mapper>

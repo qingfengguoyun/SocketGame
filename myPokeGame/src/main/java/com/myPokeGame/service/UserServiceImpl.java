@@ -57,10 +57,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User Login(User user) {
+    public User login(User user) {
         User res = userMapper.checkNameAndPass(user);
-        if(ObjectUtils.isEmpty(res)){
-            if(ObjectUtils.isEmpty(onlineUserMap.get(res))){
+        if(!ObjectUtils.isEmpty(res)){
+            if(!ObjectUtils.isEmpty(onlineUserMap.get(res))){
                 throw new NativeException("不能重复登录");
             }else{
                 onlineUserMap.put(res,new Date());

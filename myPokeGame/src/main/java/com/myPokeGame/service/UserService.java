@@ -10,7 +10,7 @@ public interface UserService {
 
     public User signUser(User user);
 
-    public User Login(User user);
+    public User login(User user);
 
     public List<String> queryAllUserName();
 }

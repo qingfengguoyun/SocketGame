@@ -28,18 +28,18 @@ public class UserController {
         return Result.success(user1);
     }
 
-    @ApiOperation(value = "保存用户")
-    @PostMapping("/save")
+    @ApiOperation(value = "用户注册")
+    @PostMapping("/sign")
     public Result signUser(@RequestBody User user){
-        User user1 = userService.saveUser(user);
+        User user1 = userService.signUser(user);
         log.info(user1.toString());
         return Result.success(user1);
     }
 
-    @ApiOperation(value = "保存用户")
-    @PostMapping("/save")
+    @ApiOperation(value = "用户登录")
+    @PostMapping("/login")
     public Result userLogin(@RequestBody User user){
-        User user1 = userService.saveUser(user);
+        User user1 = userService.login(user);
         log.info(user1.toString());
         return Result.success(user1);
     }
