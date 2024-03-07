@@ -30,4 +30,12 @@ public class Result {
         return result;
     }
 
+    public static Result fail(String message){
+        Result result =new Result();
+        result.code=ResultEnum.error.code;
+        result.status=ResultEnum.error.stauts;
+        result.setData(message);
+        return result;
+    }
+
 }

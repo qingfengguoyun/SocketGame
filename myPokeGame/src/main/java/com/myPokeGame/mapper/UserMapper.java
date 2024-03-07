@@ -15,4 +15,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     public List<String> queryAllUserName();
 
+    public User checkNameAndPass(User user);
+
 }

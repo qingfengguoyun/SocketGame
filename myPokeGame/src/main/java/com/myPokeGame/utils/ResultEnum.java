@@ -3,7 +3,7 @@ package com.myPokeGame.utils;
 public enum ResultEnum {
 
     success(200,"success"),
-    error(500,"error");
+    error(500,"fail");
 
     public Integer code;
     public String stauts;

@@ -8,4 +8,8 @@
         select user_name from user
     </select>
 
+    <select id="checkNameAndPass" resultType="com.myPokeGame.entity.User"  parameterType="com.myPokeGame.entity.User">
+        select * from user u where u.user_name = #{user.userName} and u.password= #{user.password}
+    </select>
+
 </mapper>

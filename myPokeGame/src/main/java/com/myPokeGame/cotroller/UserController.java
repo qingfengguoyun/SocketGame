@@ -28,6 +28,22 @@ public class UserController {
         return Result.success(user1);
     }
 
+    @ApiOperation(value = "保存用户")
+    @PostMapping("/save")
+    public Result signUser(@RequestBody User user){
+        User user1 = userService.saveUser(user);
+        log.info(user1.toString());
+        return Result.success(user1);
+    }
+
+    @ApiOperation(value = "保存用户")
+    @PostMapping("/save")
+    public Result userLogin(@RequestBody User user){
+        User user1 = userService.saveUser(user);
+        log.info(user1.toString());
+        return Result.success(user1);
+    }
+
     @ApiOperation(value = "查询所有用户名")
     @PostMapping("/queryAllName")
     public Result queryAllName(){
