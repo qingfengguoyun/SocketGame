@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
            throw new NativeException("用户名重复");
         }else{
             userMapper.insert(user);
-            log.info("欢迎新用户： "+user.getUserName());
+            log.info("新用户： "+user.getUserName()+"注册成功");
         }
         return user;
     }
@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
                 throw new NativeException("不能重复登录");
             }else{
                 onlineUserMap.put(res,new Date());
+
                 String.format("欢迎用户 %s ",res.getUserName());
                 return res;
             }
