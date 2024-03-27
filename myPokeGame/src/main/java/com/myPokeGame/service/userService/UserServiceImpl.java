@@ -1,9 +1,9 @@
-package com.myPokeGame.service;
+package com.myPokeGame.service.userService;
 
 import com.myPokeGame.entity.User;
 import com.myPokeGame.exceptions.NativeException;
 import com.myPokeGame.mapper.UserMapper;
-import com.myPokeGame.utils.Result;
+import com.myPokeGame.service.socketIoService.SocketIoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,9 +63,8 @@ public class UserServiceImpl implements UserService {
             if(!ObjectUtils.isEmpty(onlineUserMap.get(res))){
                 throw new NativeException("不能重复登录");
             }else{
-                onlineUserMap.put(res,new Date());
-
-                String.format("欢迎用户 %s ",res.getUserName());
+//                onlineUserMap.put(res,new Date());
+                System.out.println(String.format("欢迎用户 %s ",res.getUserName()));
                 return res;
             }
         }

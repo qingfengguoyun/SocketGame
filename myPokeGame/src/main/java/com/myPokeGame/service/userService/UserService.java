@@ -1,4 +1,4 @@
-package com.myPokeGame.service;
+package com.myPokeGame.service.userService;
 
 import com.myPokeGame.entity.User;
 

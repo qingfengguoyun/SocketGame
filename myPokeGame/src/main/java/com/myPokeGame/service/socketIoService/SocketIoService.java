@@ -1,4 +1,4 @@
-package com.myPokeGame.service;
+package com.myPokeGame.service.socketIoService;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
@@ -26,6 +26,7 @@ public class SocketIoService {
 
     @PostConstruct
     private void autoStart(){
+        log.info("socketIo auto start");
         start();
     }
 
@@ -65,7 +66,7 @@ public class SocketIoService {
             log.info("用户"+userName+"退出");
         });
 
-        socketIOServer.addEventListener("message",String.class,(client,data,ackSender)->{
+        socketIOServer.addEventListener(SocketIoEvents.RECEIVE_MESSAGE,String.class,(client,data,ackSender)->{
             String id = client.getSessionId().toString();
             String userName = users.get(id);
             log.info("收到用户"+userName+"发送的消息："+data.toString());

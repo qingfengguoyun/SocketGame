@@ -1,7 +1,7 @@
 package com.myPokeGame.cotroller;
 
 import com.myPokeGame.entity.User;
-import com.myPokeGame.service.UserService;
+import com.myPokeGame.service.userService.UserService;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
