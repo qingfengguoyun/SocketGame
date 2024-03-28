@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @TableName(value = "user")
 public class User {
 
-    @TableId(value = "user_id",type= IdType.AUTO)
-    Integer userId;
+    @TableId(value = "user_id",type= IdType.ASSIGN_ID)
+    Long userId;
 
     @TableField(value = "user_name")
     String userName;

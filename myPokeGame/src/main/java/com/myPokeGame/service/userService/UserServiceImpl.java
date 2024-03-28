@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Autowired
-    Map<User, Date> onlineUserMap;
+    Map<Long, Date> onlineUserMap;
 
     @Autowired
     SocketIoService socketIoService;
@@ -58,14 +59,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(User user) {
-        User res = userMapper.checkNameAndPass(user);
-        if(!ObjectUtils.isEmpty(res)){
-            if(!ObjectUtils.isEmpty(onlineUserMap.get(res))){
-                throw new NativeException("不能重复登录");
+        User loginUser = userMapper.checkNameAndPass(user);
+        if(!ObjectUtils.isEmpty(loginUser)){
+            if(!ObjectUtils.isEmpty(onlineUserMap.get(loginUser.getUserId()))){
+                Date date = onlineUserMap.get(loginUser.getUserId());
+                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                log.info("用户上次登录时间："+sdf.format(date));
+                onlineUserMap.put(loginUser.getUserId(),new Date());
+//                throw new NativeException("不能重复登录,上次登录时间："+sdf.format(date));
+                return loginUser;
             }else{
-//                onlineUserMap.put(res,new Date());
-                System.out.println(String.format("欢迎用户 %s ",res.getUserName()));
-                return res;
+                onlineUserMap.put(loginUser.getUserId(),new Date());
+                System.out.println(String.format("欢迎用户 %s ",loginUser.getUserName()));
+                return loginUser;
             }
         }
         throw new NativeException("用户未注册");
