@@ -1,8 +1,11 @@
 package com.myPokeGame.service.socketIoService;
 
+import cn.hutool.core.util.IdUtil;
+import com.alibaba.fastjson.JSON;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.myPokeGame.entity.User;
+import com.myPokeGame.models.vo.MessageVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,8 +90,21 @@ public class SocketIoService {
             String id = client.getSessionId().toString();
             String userName = sessionId_user.get(id).getUserName();
             log.info("收到用户"+userName+"发送的消息："+data.toString());
-            socketIOServer.getBroadcastOperations().sendEvent(SocketIoEvents.SEND_MESSAGE,"用户"+userName+"："+data.toString());
+            MessageVo vo = MessageVo.builder().userId(sessionId_user.get(id).getUserId())
+                    .userName(userName)
+                    .messageContent(data.toString())
+                    .messageId(IdUtil.getSnowflakeNextId()).build();
+//            socketIOServer.getBroadcastOperations().sendEvent(SocketIoEvents.SEND_MESSAGE,"用户"+userName+"："+data.toString());
+            sendBroadCastMessage(vo,SocketIoEvents.SEND_MESSAGE);
         });
         socketIOServer.start();
+    }
+
+    public void sendBroadCastMessage(Object data,String eventName){
+        if(ObjectUtils.isEmpty(data)){
+            log.info("推送内容为空");
+            return;
+        }
+        socketIOServer.getBroadcastOperations().sendEvent(eventName, JSON.toJSONString(data));
     }
 }
