@@ -3,6 +3,7 @@ package com.myPokeGame.service.userService;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.exceptions.NativeException;
 import com.myPokeGame.mapper.UserMapper;
+import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.service.socketIoService.SocketIoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -84,5 +83,20 @@ public class UserServiceImpl implements UserService {
             System.out.println(t);
         });
         return names;
+    }
+
+    @Override
+    public List<User> queryAllUsers() {
+        List<User> users = userMapper.selectList(null);
+        return users;
+//        List<UserVo> resList=new LinkedList<>();
+//        Set<Long> longs = onlineUserMap.keySet();
+//        users.stream().forEach(t->{
+//            UserVo vo = UserVo.builder().userId(t.getUserId()).userName(t.getUserName()).build();
+//            if(longs.contains(t.getUserId()));
+//            vo.setIsOnline(true);
+//            resList.add(vo);
+//        });
+//        return resList;
     }
 }

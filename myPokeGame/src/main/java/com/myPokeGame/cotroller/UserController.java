@@ -1,6 +1,7 @@
 package com.myPokeGame.cotroller;
 
 import com.myPokeGame.entity.User;
+import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.service.userService.UserService;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
@@ -9,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -19,6 +20,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    Map<Long, Date> onlineUserMap;
 
     @ApiOperation(value = "保存用户")
     @PostMapping("/save")
@@ -49,5 +53,23 @@ public class UserController {
     public Result queryAllName(){
         List<String> names = userService.queryAllUserName();
         return Result.success(names);
+    }
+
+    @ApiOperation(value = "查询所有用户和登录状态")
+    @PostMapping("/queryAllUserStatus")
+    public Result queryAllUserStatus(){
+//        List<String> names = userService.queryAllUserName();
+        List<User> users = userService.queryAllUsers();
+        List<UserVo> resList=new LinkedList<>();
+        Set<Long> longs = onlineUserMap.keySet();
+        users.stream().forEach(t->{
+            UserVo vo = UserVo.builder().userId(t.getUserId()).userName(t.getUserName()).build();
+            if(longs.contains(t.getUserId())){
+                vo.setIsOnline(true);
+            };
+
+            resList.add(vo);
+        });
+        return Result.success(resList);
     }
 }

@@ -13,4 +13,6 @@ public interface UserService {
     public User login(User user);
 
     public List<String> queryAllUserName();
+
+    public List<User> queryAllUsers();
 }
