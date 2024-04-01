@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: project_02_28
+  thymeleaf:
+    cache: false
 
 # netty-socketio 配置
 socketio:

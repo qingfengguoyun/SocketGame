@@ -18,8 +18,5 @@ public class PokeApplication {
 
     }
 
-    @Bean
-    public Map<User, Date> onlineUserMap(){
-        return new HashMap<User,Date>();
-    }
+
 }

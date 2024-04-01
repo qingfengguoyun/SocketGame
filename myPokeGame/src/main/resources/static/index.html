@@ -5,6 +5,68 @@
     <title>Title</title>
 </head>
 <body>
-this is index Page
+	<div id="index">
+		this is static index Page
+		<div>
+			<label>姓名：</label><textarea v-model="uName" id="uName" type="text" /></textarea>
+			<label>密码：</label><textarea v-model="pword" id="pword" type="text" /></textarea>
+		</div>
+		<div>
+			{{uName}}
+			{{pword}}
+		</div>
+		<div id="frontPage"></div>
+		<button @click="sign"> 注册</button>
+		<button @click="loadContent"> 登录</button>
+	</div>
+
 </body>
 </html>
+<script src="https://cdn.staticfile.org/vue/3.2.36/vue.global.min.js"></script>
+<!-- <script src="js/indexScript.js"></script> -->
+<script src="js/User.js"></script>
+<script src="js/jquery-3.1.1.min.js"></script>
+<!-- <script src="vues/frontPage.vue"></script> -->
+<script>	
+	
+
+	let user=new User();
+	user.userName="qwe";
+	console.log(user.userName);
+	let userName;
+	let password;
+	let app={
+		data(){
+			return{
+				uName: user.userName,
+				pword: user.password,
+			}
+		},
+		methods:{
+			sign,
+			login,
+			loadContent
+		}
+	}
+	
+	Vue.createApp(app).mount("#index");
+	function sign(){
+		user.userName=$("#uName").val();
+		user.password=$("#pword").val();
+		console.log(user.userName);
+		console.log(user.password);
+		// console.log($('#uName').val());
+		// console.log(password);
+	}
+	
+	function loadContent() {
+		console.log("did");
+		$("#frontPage").load("front.html");
+	}
+	function login(){
+		// window.location.href = `html/frontPage.html?user=${JSON.stringify(user)}`;
+		$("#frontPage").innerHtml()
+	}
+	
+	
+</script>

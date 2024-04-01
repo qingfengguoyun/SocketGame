@@ -1,4 +1,4 @@
-package com.myPokeGame.service;
+package com.myPokeGame.service.userService;
 
 import com.myPokeGame.entity.User;
 
@@ -13,4 +13,6 @@ public interface UserService {
     public User login(User user);
 
     public List<String> queryAllUserName();
+
+    public List<User> queryAllUsers();
 }
