@@ -14,7 +14,8 @@ spring:
 
 # netty-socketio 配置
 socketio:
-  host: localhost
+  # 后端配置socketio端口，0.0.0.0表示所有端口均可访问
+  host: 0.0.0.0
   port: 8271
   # 设置最大每帧处理数据的长度，防止他人利用大数据来攻击服务器
   maxFramePayloadLength: 1048576
