@@ -34,8 +34,9 @@ public class Message {
 
     //额外的属性
     //是否全员可见
-    @TableId(value = "date")
-    Boolean isBroadCast=true;
+    @TableId(value = "is_broadcast")
+    Boolean isBroadcast=true;
     //回复的消息id
+    @TableId(value = "reply_message_id")
     Long replyMessageId=null;
 }

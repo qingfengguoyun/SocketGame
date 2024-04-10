@@ -15,4 +15,6 @@ public interface UserService {
     public List<String> queryAllUserName();
 
     public List<User> queryAllUsers();
+
+    public User queryUserById(Long userId);
 }

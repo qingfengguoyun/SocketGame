@@ -1,9 +1,12 @@
 package com.myPokeGame.models.vo;
 
+import com.myPokeGame.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,11 +14,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MessageVo {
 
-    Long userId;
 
-    String userName;
+    User sendUser;
+
+    User receiveUser;
 
     Long messageId;
 
     String messageContent;
+
+    Date date;
 }

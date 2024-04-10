@@ -99,4 +99,10 @@ public class UserServiceImpl implements UserService {
 //        });
 //        return resList;
     }
+
+    @Override
+    public User queryUserById(Long userId) {
+        User user = userMapper.selectById(userId);
+        return user;
+    }
 }
