@@ -16,11 +16,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserVo {
 
-    @JSONField(serializeUsing = ToStringSerializer.class)
+//    @JSONField(serializeUsing = ToStringSerializer.class)
     Long userId;
 
     String userName;
-
 
     Boolean isOnline;
 

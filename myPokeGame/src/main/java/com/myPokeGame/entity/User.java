@@ -22,7 +22,6 @@ public class User {
 
 
     @TableId(value = "user_id",type= IdType.ASSIGN_ID)
-//  @JSONField(serializeUsing = ToStringSerializer.class)不好使，不清楚为何
 //  @JSONField(serializeUsing = ToStringSerializer.class)
     Long userId;
 

@@ -67,7 +67,6 @@ public class UserController {
             if(longs.contains(t.getUserId())){
                 vo.setIsOnline(true);
             };
-
             resList.add(vo);
         });
         return Result.success(resList);

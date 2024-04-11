@@ -76,7 +76,8 @@ public class SocketIoService {
                 sessionId_user.put(client.getSessionId().toString(),user);
                 userId_client.put(user.getUserId(),client);
                 log.info("用户"+userName+"加入");
-                socketIOServer.getBroadcastOperations().sendEvent("message","用户"+userName+"加入");
+//                socketIOServer.getBroadcastOperations().sendEvent("message","用户"+userName+"加入");
+                sendBroadCastMessage(userId,SocketIoEvents.USER_ONLINE);
             }
         });
 
@@ -90,6 +91,7 @@ public class SocketIoService {
             userId_client.remove(userId);
             onlineUserMap.remove(userId);
             log.info("用户"+userName+"退出");
+            sendBroadCastMessage(userId,SocketIoEvents.USER_OFFLINE);
         });
 
         socketIOServer.addEventListener(SocketIoEvents.RECEIVE_MESSAGE, JSONObject.class,(client, data, ackSender)->{
