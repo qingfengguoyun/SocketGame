@@ -66,6 +66,7 @@ public class UserController {
             UserVo vo = UserVo.builder().userId(t.getUserId()).userName(t.getUserName()).build();
             if(longs.contains(t.getUserId())){
                 vo.setIsOnline(true);
+                vo.setLastOnLineTime(onlineUserMap.get(t.getUserId()));
             };
             resList.add(vo);
         });

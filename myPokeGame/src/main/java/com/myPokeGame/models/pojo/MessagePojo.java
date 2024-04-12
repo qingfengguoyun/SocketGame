@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MessagePojo {
 
+    Long sendUserId;
+
     String content;
 
     Long replyMessageId=null;

@@ -76,6 +76,9 @@ public class SocketIoService {
                 sessionId_user.put(client.getSessionId().toString(),user);
                 userId_client.put(user.getUserId(),client);
                 log.info("用户"+userName+"加入");
+                //接通socket时也要将userId加入onlineUserMap
+                //前端刷新时会连续触发socket切断与socekt重新连接
+                onlineUserMap.put(userId,new Date());
 //                socketIOServer.getBroadcastOperations().sendEvent("message","用户"+userName+"加入");
                 sendBroadCastMessage(userId,SocketIoEvents.USER_ONLINE);
             }

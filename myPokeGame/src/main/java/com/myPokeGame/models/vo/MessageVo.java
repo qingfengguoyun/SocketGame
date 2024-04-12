@@ -1,5 +1,6 @@
 package com.myPokeGame.models.vo;
 
+import com.myPokeGame.entity.Message;
 import com.myPokeGame.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,4 +25,8 @@ public class MessageVo {
     String messageContent;
 
     Date date;
+
+    public static MessageVo convert(Message message){
+        return null;
+    }
 }
