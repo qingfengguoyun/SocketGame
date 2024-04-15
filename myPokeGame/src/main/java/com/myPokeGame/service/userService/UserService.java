@@ -2,6 +2,8 @@ package com.myPokeGame.service.userService;
 
 import com.myPokeGame.entity.User;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface UserService {
@@ -10,7 +12,7 @@ public interface UserService {
 
     public User signUser(User user);
 
-    public User login(User user);
+    public User login(User user, HttpServletRequest request, HttpServletResponse response);
 
     public List<String> queryAllUserName();
 

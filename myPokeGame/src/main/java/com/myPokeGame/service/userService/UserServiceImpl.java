@@ -5,11 +5,14 @@ import com.myPokeGame.exceptions.NativeException;
 import com.myPokeGame.mapper.UserMapper;
 import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.service.socketIoService.SocketIoService;
+import com.myPokeGame.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -25,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     SocketIoService socketIoService;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
 
     @Override
@@ -57,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(User user) {
+    public User login(User user, HttpServletRequest request, HttpServletResponse response) {
         User loginUser = userMapper.checkNameAndPass(user);
         if(!ObjectUtils.isEmpty(loginUser)){
             if(!ObjectUtils.isEmpty(onlineUserMap.get(loginUser.getUserId()))){
@@ -66,10 +72,14 @@ public class UserServiceImpl implements UserService {
                 log.info("用户上次登录时间："+sdf.format(date));
                 onlineUserMap.put(loginUser.getUserId(),new Date());
 //                throw new NativeException("不能重复登录,上次登录时间："+sdf.format(date));
+                String token = JwtUtils.createToken(loginUser.getUserId(), loginUser.getUserName());
+                response.setHeader("Authorization",token);
                 return loginUser;
             }else{
                 onlineUserMap.put(loginUser.getUserId(),new Date());
                 System.out.println(String.format("欢迎用户 %s ",loginUser.getUserName()));
+                String token = JwtUtils.createToken(loginUser.getUserId(), loginUser.getUserName());
+                response.setHeader("Authorization",token);
                 return loginUser;
             }
         }

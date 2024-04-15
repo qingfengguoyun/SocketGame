@@ -9,5 +9,7 @@ public interface MessageService {
 
     public Message insertMessage(MessagePojo messagePojo);
 
+    public Message insertMessage(Message message);
+
     public List<Message> queryLastestMessages(Integer num);
 }

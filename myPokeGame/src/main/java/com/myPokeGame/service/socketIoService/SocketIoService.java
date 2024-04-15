@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.myPokeGame.entity.Message;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.models.pojo.MessagePojo;
 import com.myPokeGame.models.vo.MessageVo;
+import com.myPokeGame.service.messageService.MessageService;
 import com.myPokeGame.service.userService.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class SocketIoService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    MessageService messageService;
 
     @Autowired
     Map<Long, Date> onlineUserMap;
@@ -103,6 +108,9 @@ public class SocketIoService {
 
             MessagePojo pojo = JSONObject.toJavaObject((JSONObject)data, MessagePojo.class);
             log.info("收到用户"+userName+"发送的消息："+pojo.getContent());
+
+            Message message = messageService.insertMessage(pojo);
+
             User sender = userService.queryUserById(sessionId_user.get(id).getUserId());
             User receiver=null;
             if(!ObjectUtils.isEmpty(pojo.getReplayUserId())){
@@ -110,9 +118,9 @@ public class SocketIoService {
             }
             MessageVo vo = MessageVo.builder().sendUser(sender)
                     .receiveUser(receiver)
-                    .messageContent(pojo.getContent())
-                    .messageId(IdUtil.getSnowflakeNextId())
-                    .date(new Date())
+                    .messageContent(message.getContent())
+                    .messageId(message.getMessageId())
+                    .date(message.getDate())
                     .build();
 //            socketIOServer.getBroadcastOperations().sendEvent(SocketIoEvents.SEND_MESSAGE,"用户"+userName+"："+data.toString());
             sendBroadCastMessage(vo,SocketIoEvents.SEND_MESSAGE);

@@ -8,7 +8,7 @@ spring:
       createDatabaseIfNotExist=true\
       &serverTimezone=Asia/Shanghai\
       &useUnicode=true\
-      &charactorEncoding=UTF-8"
+      &characterEncoding=UTF-8"
     username: root
     password: mysql
 
@@ -36,3 +36,9 @@ mybatis-plus:
   configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true #数据库下划线自动转驼峰
+
+jwt:
+  header: "Authorization"
+  tokenPrefix: "MyGame"
+  secret: "myGame"
+  expireTime: 1440 #24hours

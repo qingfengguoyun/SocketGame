@@ -27,7 +27,13 @@ public class MessageServiceImpl implements MessageService {
         message.setDate(new Date());
         message.setReplyUserId(CommonUtils.getObjectOrNull(messagePojo.getReplayUserId()));
         message.setReplyMessageId(CommonUtils.getObjectOrNull(messagePojo.getReplyMessageId()));
-//        message.setIsBroadcast(true);
+        message.setIsBroadcast(true);
+        messageMapper.insert(message);
+        return message;
+    }
+
+    @Override
+    public Message insertMessage(Message message) {
         messageMapper.insert(message);
         return message;
     }
