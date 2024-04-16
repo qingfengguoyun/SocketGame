@@ -12,18 +12,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+//存在类继承时需使用SuperBuilder
+@SuperBuilder
 @TableName(value = "user")
-public class User {
+public class User extends BaseEntity{
 
 
-    @TableId(value = "user_id",type= IdType.ASSIGN_ID)
-//  @JSONField(serializeUsing = ToStringSerializer.class)
-    Long userId;
+//    @TableId(value = "user_id",type= IdType.ASSIGN_ID)
+////  @JSONField(serializeUsing = ToStringSerializer.class)
+//    Long userId;
 
     @TableField(value = "user_name")
     String userName;

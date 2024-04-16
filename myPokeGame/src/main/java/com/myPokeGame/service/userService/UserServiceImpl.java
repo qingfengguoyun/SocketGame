@@ -35,11 +35,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        if(user.getUserId()==null){
+        if(user.getId()==null){
             userMapper.insert(user);
             return user;
         }else{
-            User u = userMapper.selectById(user.getUserId());
+            User u = userMapper.selectById(user.getId());
             if(u==null){
                 userMapper.insert(user);
                 return user;
@@ -66,19 +66,19 @@ public class UserServiceImpl implements UserService {
     public User login(User user, HttpServletRequest request, HttpServletResponse response) {
         User loginUser = userMapper.checkNameAndPass(user);
         if(!ObjectUtils.isEmpty(loginUser)){
-            if(!ObjectUtils.isEmpty(onlineUserMap.get(loginUser.getUserId()))){
-                Date date = onlineUserMap.get(loginUser.getUserId());
+            if(!ObjectUtils.isEmpty(onlineUserMap.get(loginUser.getId()))){
+                Date date = onlineUserMap.get(loginUser.getId());
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 log.info("用户上次登录时间："+sdf.format(date));
-                onlineUserMap.put(loginUser.getUserId(),new Date());
+                onlineUserMap.put(loginUser.getId(),new Date());
 //                throw new NativeException("不能重复登录,上次登录时间："+sdf.format(date));
-                String token = JwtUtils.createToken(loginUser.getUserId(), loginUser.getUserName());
+                String token = JwtUtils.createToken(loginUser.getId(), loginUser.getUserName());
                 response.setHeader("Authorization",token);
                 return loginUser;
             }else{
-                onlineUserMap.put(loginUser.getUserId(),new Date());
+                onlineUserMap.put(loginUser.getId(),new Date());
                 System.out.println(String.format("欢迎用户 %s ",loginUser.getUserName()));
-                String token = JwtUtils.createToken(loginUser.getUserId(), loginUser.getUserName());
+                String token = JwtUtils.createToken(loginUser.getId(), loginUser.getUserName());
                 response.setHeader("Authorization",token);
                 return loginUser;
             }

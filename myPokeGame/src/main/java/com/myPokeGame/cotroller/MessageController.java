@@ -47,7 +47,7 @@ public class MessageController {
             vo.setSendUser(sendUser);
             vo.setReceiveUser(receiveUser);
             vo.setMessageContent(mes.getContent());
-            vo.setMessageId(mes.getMessageId());
+            vo.setMessageId(mes.getId());
             vo.setDate(mes.getDate());
             voList.add(vo);
         }

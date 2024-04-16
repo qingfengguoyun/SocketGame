@@ -8,18 +8,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builder
+@SuperBuilder
 @TableName(value = "message")
-public class Message {
+public class Message extends BaseEntity{
 
-    @TableId(value = "message_id",type= IdType.ASSIGN_ID)
-    Long messageId;
     // 消息内容
     @TableField(value = "content")
     String content;
@@ -29,9 +28,7 @@ public class Message {
     // 接收者id 默认为null
     @TableField(value = "reply_user_id")
     Long replyUserId;
-    // 创建日期
-    @TableField(value = "date")
-    Date date=new Date();
+
 
     //额外的属性
     //是否全员可见

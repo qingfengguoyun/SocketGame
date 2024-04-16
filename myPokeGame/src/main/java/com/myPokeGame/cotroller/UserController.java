@@ -65,10 +65,10 @@ public class UserController {
         List<UserVo> resList=new LinkedList<>();
         Set<Long> longs = onlineUserMap.keySet();
         users.stream().forEach(t->{
-            UserVo vo = UserVo.builder().userId(t.getUserId()).userName(t.getUserName()).build();
-            if(longs.contains(t.getUserId())){
+            UserVo vo = UserVo.builder().userId(t.getId()).userName(t.getUserName()).build();
+            if(longs.contains(t.getId())){
                 vo.setIsOnline(true);
-                vo.setLastOnLineTime(onlineUserMap.get(t.getUserId()));
+                vo.setLastOnLineTime(onlineUserMap.get(t.getId()));
             };
             resList.add(vo);
         });

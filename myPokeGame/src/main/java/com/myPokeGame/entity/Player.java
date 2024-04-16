@@ -20,7 +20,7 @@ public class Player extends User{
 
 
     public Player(User user) {
-        this.userId=user.getUserId();
+//        this.userId=user.getUserId();
         this.userName=user.getUserName();
         this.cards=new LinkedList<>();
         this.isConnected=true;

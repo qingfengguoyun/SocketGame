@@ -73,13 +73,13 @@ public class SocketIoService {
                 String userName=urlParams.get("userName").get(0);
                 Long userId=Long.parseLong(urlParams.get("id").get(0));
                 String password=urlParams.get("password").get(0);
-                User user=User.builder().userId(userId).userName(userName).password(password).build();
+                User user=User.builder().id(userId).userName(userName).password(password).build();
 
                 //可以添加顶号检测，若userId_client的keySet中发现已存在userId，则向该client发送被顶号消息，并移除client
                 //添加socket连接记录
                 clients.put(client.getSessionId().toString(),client);
                 sessionId_user.put(client.getSessionId().toString(),user);
-                userId_client.put(user.getUserId(),client);
+                userId_client.put(user.getId(),client);
                 log.info("用户"+userName+"加入");
                 //接通socket时也要将userId加入onlineUserMap
                 //前端刷新时会连续触发socket切断与socekt重新连接
@@ -93,7 +93,7 @@ public class SocketIoService {
             String id = client.getSessionId().toString();
             clients.remove(id);
             String userName = sessionId_user.get(id).getUserName();
-            Long userId=sessionId_user.get(id).getUserId();
+            Long userId=sessionId_user.get(id).getId();
 
             sessionId_user.remove(id);
             userId_client.remove(userId);
@@ -111,7 +111,7 @@ public class SocketIoService {
 
             Message message = messageService.insertMessage(pojo);
 
-            User sender = userService.queryUserById(sessionId_user.get(id).getUserId());
+            User sender = userService.queryUserById(sessionId_user.get(id).getId());
             User receiver=null;
             if(!ObjectUtils.isEmpty(pojo.getReplayUserId())){
                 receiver = userService.queryUserById(pojo.getReplayUserId());
@@ -119,7 +119,7 @@ public class SocketIoService {
             MessageVo vo = MessageVo.builder().sendUser(sender)
                     .receiveUser(receiver)
                     .messageContent(message.getContent())
-                    .messageId(message.getMessageId())
+                    .messageId(message.getId())
                     .date(message.getDate())
                     .build();
 //            socketIOServer.getBroadcastOperations().sendEvent(SocketIoEvents.SEND_MESSAGE,"用户"+userName+"："+data.toString());
