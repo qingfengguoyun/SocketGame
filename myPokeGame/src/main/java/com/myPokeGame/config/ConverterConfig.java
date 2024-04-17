@@ -66,7 +66,7 @@ public class ConverterConfig implements WebMvcConfigurer {
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
         SerializeConfig serializeConfig = SerializeConfig.globalInstance;
         serializeConfig.put(BigInteger.class, ToStringSerializer.instance);
-        //Long 转化为String：前端number类型只能接收17位，超出的部分会失真
+        //为何需要将 Long 转化为String：前端number类型只能接收17位，超出的部分会失真
 //        将 Long 类型(包装类）的对象序列化为字符串
         serializeConfig.put(Long.class,ToStringSerializer.instance);
 //        将 long 类型（基本类型）的对象序列化为字符串

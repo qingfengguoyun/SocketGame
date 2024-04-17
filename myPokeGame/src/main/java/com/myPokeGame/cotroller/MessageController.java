@@ -5,14 +5,17 @@ import com.myPokeGame.entity.User;
 import com.myPokeGame.models.pojo.MessagePojo;
 import com.myPokeGame.models.vo.MessageVo;
 import com.myPokeGame.service.messageService.MessageService;
+import com.myPokeGame.service.socketIoService.SocketIoEvents;
+import com.myPokeGame.service.socketIoService.SocketIoService;
 import com.myPokeGame.service.userService.UserService;
+import com.myPokeGame.utils.ConvertUtils;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +29,9 @@ public class MessageController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    SocketIoService socketIoService;
 
 
     @ApiOperation(value = "保存信息")
@@ -43,15 +49,24 @@ public class MessageController {
         for(Message mes:messages){
             MessageVo vo=new MessageVo();
             User sendUser = userService.queryUserById(mes.getSendUserId());
-            User receiveUser = userService.queryUserById(mes.getReplyUserId());
-            vo.setSendUser(sendUser);
-            vo.setReceiveUser(receiveUser);
-            vo.setMessageContent(mes.getContent());
-            vo.setMessageId(mes.getId());
-            vo.setDate(mes.getDate());
+            User receiveUser = userService.queryUserById(mes.getReceiveUserId());
+            ConvertUtils.convert(vo,mes,sendUser,receiveUser);
             voList.add(vo);
         }
         return Result.success(voList);
+    }
+
+    @ApiOperation(value = "私发消息")
+    @PostMapping("/sendPrivateMessage")
+    public Result sendPrivateMessage(@RequestBody MessagePojo pojo){
+        Message message = messageService.sendPrivateMessage(pojo);
+        User sendUser = userService.queryUserById(message.getSendUserId());
+        User receiveUser = userService.queryUserById(message.getReceiveUserId());
+        MessageVo vo=new MessageVo();
+        ConvertUtils.convert(vo,message,sendUser,receiveUser);
+        //TODO:socket定向发送给指定用户
+        socketIoService.sendGroupMessage(vo, SocketIoEvents.SEND_PRIVATE_MESSAGE, Arrays.asList(pojo.getSendUserId(),pojo.getReceiveUserId()));
+        return Result.success(vo);
     }
 
 }

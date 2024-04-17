@@ -1,16 +1,21 @@
 package com.myPokeGame.service.socketIoService;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.ObjUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.myPokeGame.entity.Message;
 import com.myPokeGame.entity.User;
+import com.myPokeGame.mapper.MessageMapper;
+import com.myPokeGame.mapper.UserMapper;
 import com.myPokeGame.models.pojo.MessagePojo;
 import com.myPokeGame.models.vo.MessageVo;
+import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.service.messageService.MessageService;
 import com.myPokeGame.service.userService.UserService;
+import com.myPokeGame.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +23,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -38,6 +41,9 @@ public class SocketIoService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    MessageMapper messageMapper;
 
     @Autowired
     MessageService messageService;
@@ -103,18 +109,21 @@ public class SocketIoService {
         });
 
         socketIOServer.addEventListener(SocketIoEvents.RECEIVE_MESSAGE, JSONObject.class,(client, data, ackSender)->{
+
+            Map<String, List<String>> urlParams = client.getHandshakeData().getUrlParams();
+            // 根据参数名获取对应的值
+            log.info(urlParams.toString());
+
             String id = client.getSessionId().toString();
             String userName = sessionId_user.get(id).getUserName();
-
             MessagePojo pojo = JSONObject.toJavaObject((JSONObject)data, MessagePojo.class);
             log.info("收到用户"+userName+"发送的消息："+pojo.getContent());
-
-            Message message = messageService.insertMessage(pojo);
+            Message message = insertMessageAtSocket(pojo);
 
             User sender = userService.queryUserById(sessionId_user.get(id).getId());
             User receiver=null;
-            if(!ObjectUtils.isEmpty(pojo.getReplayUserId())){
-                receiver = userService.queryUserById(pojo.getReplayUserId());
+            if(!ObjectUtils.isEmpty(pojo.getReceiveUserId())){
+                receiver = userService.queryUserById(pojo.getReceiveUserId());
             }
             MessageVo vo = MessageVo.builder().sendUser(sender)
                     .receiveUser(receiver)
@@ -122,17 +131,50 @@ public class SocketIoService {
                     .messageId(message.getId())
                     .date(message.getDate())
                     .build();
-//            socketIOServer.getBroadcastOperations().sendEvent(SocketIoEvents.SEND_MESSAGE,"用户"+userName+"："+data.toString());
             sendBroadCastMessage(vo,SocketIoEvents.SEND_MESSAGE);
         });
         socketIOServer.start();
     }
 
+    /**
+     * socket 广播方法
+     * @param data
+     * @param eventName
+     */
     public void sendBroadCastMessage(Object data,String eventName){
         if(ObjectUtils.isEmpty(data)){
             log.info("推送内容为空");
             return;
         }
         socketIOServer.getBroadcastOperations().sendEvent(eventName, JSON.toJSONString(data));
+    }
+
+    /**
+     * socket 定向发送方法
+     * @param data
+     * @param eventName
+     */
+    public void sendGroupMessage(Object data, String eventName, Collection<Long> userPks ){
+        if(ObjectUtils.isEmpty(data)){
+            log.info("推送内容为空");
+            return;
+        }
+        for(Long pk:userPks){
+            SocketIOClient client = userId_client.get(pk);
+            client.sendEvent(eventName,JSON.toJSONString(data));
+        }
+    }
+
+    //socket没有requestHeader，拿不到token (暂时不知道
+    public Message insertMessageAtSocket(MessagePojo messagePojo) {
+        Message message=new Message();
+        message.setSendUserId(messagePojo.getSendUserId());
+        message.setContent(messagePojo.getContent());
+        message.setDate(new Date());
+        message.setReceiveUserId(CommonUtils.getObjectOrNull(messagePojo.getReceiveUserId()));
+        message.setReplyMessageId(CommonUtils.getObjectOrNull(messagePojo.getReplyMessageId()));
+        message.setIsBroadcast(!ObjectUtils.isEmpty(messagePojo.getIsBroadcast()?messagePojo.getIsBroadcast():true));
+        messageMapper.insert(message);
+        return message;
     }
 }

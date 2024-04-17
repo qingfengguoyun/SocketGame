@@ -26,8 +26,8 @@ public class Message extends BaseEntity{
     @TableField(value = "send_user_id")
     Long sendUserId;
     // 接收者id 默认为null
-    @TableField(value = "reply_user_id")
-    Long replyUserId;
+    @TableField(value = "receive_user_id")
+    Long receiveUserId;
 
 
     //额外的属性

@@ -5,7 +5,7 @@
 <mapper namespace="com.myPokeGame.mapper.MessageMapper">
 
     <select id="queryLatestMessagesByDate" parameterType="Integer" resultType="com.myPokeGame.entity.Message">
-        SELECT * FROM message t ORDER BY  t.`date` DESC LIMIT #{num}
+        SELECT * FROM message t where t.`is_broadcast`=TRUE ORDER BY  t.`date` DESC LIMIT #{num}
     </select>
 
 </mapper>

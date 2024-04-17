@@ -80,6 +80,7 @@ public class JwtUtils {
     }
 
     public static UserVo validateToken(String token){
+
         try{
             DecodedJWT jwt=JWT.require(Algorithm.HMAC512(secret)).build().verify(token.replaceAll(tokenPrefix,""));
             Long userId= jwt.getClaim(CLAIM_USER_ID).asLong();

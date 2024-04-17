@@ -17,5 +17,7 @@ public class MessagePojo {
 
     Long replyMessageId=null;
 
-    Long replayUserId=null;
+    Long receiveUserId=null;
+
+    Boolean isBroadcast=true;
 }
