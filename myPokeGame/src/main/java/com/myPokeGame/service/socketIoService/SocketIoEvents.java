@@ -8,4 +8,5 @@ public class SocketIoEvents {
 
     public final static String USER_ONLINE="user_online";
     public final static String USER_OFFLINE="user_offline";
+    
 }
