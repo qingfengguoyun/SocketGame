@@ -19,6 +19,7 @@ import com.myPokeGame.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.PostConstruct;
@@ -168,7 +169,8 @@ public class SocketIoService {
         }
     }
 
-    //socket没有requestHeader，拿不到token (暂时不知道
+    //socket没有requestHeader，拿不到token (暂时不知道如何获取header）
+    @Transactional
     public Message insertMessageAtSocket(MessagePojo messagePojo) {
         Message message=new Message();
         message.setSendUserId(messagePojo.getSendUserId());

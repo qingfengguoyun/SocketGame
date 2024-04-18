@@ -31,6 +31,11 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     JwtUtils jwtUtils;
 
+    /**
+     * 服务层所有包含数据库增删改操作的方法均需添加事务处理：@Transactional
+     * @param messagePojo
+     * @return
+     */
     @Override
     @Transactional
     public Message insertMessage(MessagePojo messagePojo) {

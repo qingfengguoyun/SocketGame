@@ -9,6 +9,7 @@ import com.myPokeGame.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public User saveUser(User user) {
         if(user.getId()==null){
             userMapper.insert(user);
@@ -51,6 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User signUser(User user) {
         List<String> names = userMapper.queryAllUserName();
         if(names.contains(user.getUserName())){
@@ -63,6 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User login(User user, HttpServletRequest request, HttpServletResponse response) {
         User loginUser = userMapper.checkNameAndPass(user);
         if(!ObjectUtils.isEmpty(loginUser)){
