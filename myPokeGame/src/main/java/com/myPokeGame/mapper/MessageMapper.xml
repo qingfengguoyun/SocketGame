@@ -15,7 +15,7 @@
         AND t.`is_broadcast`=FALSE
         <if test="messageId != null">
             AND t.`date` >=
-            ( SELECT m.`date` FROM `message` m WHERE m.`id`= {messageId} )
+            ( SELECT m.`date` FROM `message` m WHERE m.`id`= #{messageId} )
         </if>
         ORDER BY t.`date` DESC
         <if test="messageId == null">
