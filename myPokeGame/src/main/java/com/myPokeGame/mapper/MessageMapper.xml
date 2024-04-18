@@ -32,7 +32,7 @@
         AND t.`receive_user_id`=#{sendUserId} )
         AND t.`is_broadcast`=FALSE
         ORDER BY t.`date` DESC
-        LIMIT #{number}
+        LIMIT #{num}
 
     </select>
 </mapper>
