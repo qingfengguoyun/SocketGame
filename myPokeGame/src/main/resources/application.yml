@@ -41,4 +41,8 @@ jwt:
   header: "Authorization"
   tokenPrefix: "MyGame"
   secret: "myGame"
-  expireTime: 1440 #24hours
+  expireTime: 14400 #240hours
+
+#自定义项目配置
+app-env:
+  message-list-default: 5
