@@ -15,4 +15,12 @@ public interface MessageService {
     public List<Message> queryLastestMessages(Integer num);
 
     public Message sendPrivateMessage(MessagePojo pojo);
+
+    /**
+     * 私聊界面查询全部记录
+     * @param connectUserId 私聊对象Id
+     * @param num 显示条数
+     * @return
+     */
+    public List<Message> queryLatestPrivteMessages(Long connectUserId,Integer num);
 }
