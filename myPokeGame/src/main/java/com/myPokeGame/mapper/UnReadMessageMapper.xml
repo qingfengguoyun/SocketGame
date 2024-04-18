@@ -3,5 +3,12 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.myPokeGame.mapper.UnReadMessageMapper">
+    
+    <select id="queryBySendUserIdAndReceiveUserId" resultType="com.myPokeGame.entity.UnReadMessage">
+        SELECT * FROM un_read_message t WHERE t.`send_user_id`=#{sendUserId}
+        AND t.`receive_user_id`=#{receiveUserId} ORDER BY t.`date` ASC LIMIT 1
+    </select>
+
+
 
 </mapper>
