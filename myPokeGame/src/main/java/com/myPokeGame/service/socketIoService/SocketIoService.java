@@ -161,7 +161,10 @@ public class SocketIoService {
         }
         for(Long pk:userPks){
             SocketIOClient client = userId_client.get(pk);
-            client.sendEvent(eventName,JSON.toJSONString(data));
+            //client不为null则推送消息
+            if(!ObjectUtils.isEmpty(client)){
+                client.sendEvent(eventName,JSON.toJSONString(data));
+            }
         }
     }
 
