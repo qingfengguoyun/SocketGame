@@ -13,6 +13,9 @@ import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -33,6 +36,12 @@ public class MessageController {
     @Autowired
     SocketIoService socketIoService;
 
+    @Autowired
+    ConvertUtils convertUtils;
+
+    @Value("${app-env.message-list-default}")
+    Integer messageListDefault;
+
 
     @ApiOperation(value = "保存信息")
     @PostMapping("/saveMessage")
@@ -44,15 +53,10 @@ public class MessageController {
     @ApiOperation(value = "查询最新信息")
     @GetMapping("/queryLatestMessages")
     public Result getLatestMessages(@RequestParam(required = false) Integer num){
+        num= !ObjectUtils.isEmpty(num)?num:messageListDefault;
         List<Message> messages = messageService.queryLastestMessages(num);
         List<MessageVo> voList=new LinkedList<>();
-        for(Message mes:messages){
-            MessageVo vo=new MessageVo();
-            User sendUser = userService.queryUserById(mes.getSendUserId());
-            User receiveUser = userService.queryUserById(mes.getReceiveUserId());
-            ConvertUtils.convert(vo,mes,sendUser,receiveUser);
-            voList.add(vo);
-        }
+        voList=convertUtils.convert(messages,new MessageVo());
         return Result.success(voList);
     }
 
@@ -67,6 +71,16 @@ public class MessageController {
         //TODO:socket定向发送给指定用户
         socketIoService.sendGroupMessage(vo, SocketIoEvents.SEND_PRIVATE_MESSAGE, Arrays.asList(pojo.getSendUserId(),pojo.getReceiveUserId()));
         return Result.success(vo);
+    }
+
+    @ApiOperation(value = "获取私聊信息")
+    @GetMapping("/getPrivateMessage")
+    public Result getPrivateMesssageList(Long connectUserId,
+                                         @RequestParam(required = false) Integer num){
+        num= !ObjectUtils.isEmpty(num)?num:messageListDefault;
+        List<Message> messages = messageService.queryLatestPrivteMessages(connectUserId, num);
+        List<MessageVo> vos = convertUtils.convert(messages,new MessageVo());
+        return Result.success(vos);
     }
 
 }
