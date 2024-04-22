@@ -5,7 +5,9 @@ import com.myPokeGame.entity.UnReadMessage;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.mapper.MessageMapper;
 import com.myPokeGame.mapper.UserMapper;
+import com.myPokeGame.models.dto.UnReadMessageCountDto;
 import com.myPokeGame.models.vo.MessageVo;
+import com.myPokeGame.models.vo.UnReadMessageCountVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -21,7 +23,7 @@ public class ConvertUtils {
     @Autowired
     private MessageMapper messageMapper;
 
-    public static void convert(UnReadMessage unReadMessage,Message message){
+    public static void convert(Message message,UnReadMessage unReadMessage){
         unReadMessage.setMessageId(message.getId());
         unReadMessage.setDate(message.getDate());
         unReadMessage.setReceiveUserId(message.getReceiveUserId());
@@ -68,5 +70,17 @@ public class ConvertUtils {
             }
         }
         return userMap.get(id);
+    }
+
+    public static List<UnReadMessageCountVo> convert(List<UnReadMessageCountDto> dtos){
+        List<UnReadMessageCountVo> list=new LinkedList<>();
+        for(UnReadMessageCountDto dto:dtos){
+            UnReadMessageCountVo vo=new UnReadMessageCountVo();
+            vo.setId(dto.getId());
+            vo.setUserName(dto.getUserName());
+            vo.setUnReadMessageCount(dto.getUnReadMessageCount());
+            list.add(vo);
+        }
+        return list;
     }
 }

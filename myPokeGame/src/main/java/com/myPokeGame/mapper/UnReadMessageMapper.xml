@@ -8,6 +8,14 @@
         SELECT * FROM un_read_message t WHERE t.`send_user_id`=#{sendUserId}
         AND t.`receive_user_id`=#{receiveUserId} ORDER BY t.`date` ASC LIMIT 1
     </select>
+    
+    <select id="queryUnReadMessageCountByUserId" resultType="com.myPokeGame.models.dto.UnReadMessageCountDto">
+        SELECT u.`id`,u.`user_name`,COUNT(un.`receive_user_id`) AS un_read_message_count
+        FROM `user` u LEFT JOIN `un_read_message` un ON u.`id`= un.`send_user_id`
+        WHERE
+        un.`receive_user_id`=#{userId}
+        GROUP BY u.`id`
+    </select>
 
 
 

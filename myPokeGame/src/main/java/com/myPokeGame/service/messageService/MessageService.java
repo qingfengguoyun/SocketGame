@@ -1,8 +1,10 @@
 package com.myPokeGame.service.messageService;
 
 import com.myPokeGame.entity.Message;
+import com.myPokeGame.models.dto.UnReadMessageCountDto;
 import com.myPokeGame.models.pojo.MessagePojo;
 import com.myPokeGame.models.vo.MessageVo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,4 +25,11 @@ public interface MessageService {
      * @return
      */
     public List<Message> queryLatestPrivteMessages(Long connectUserId,Integer num);
+
+    /**
+     * 查询用户未读的私聊消息数量
+     * @param userId
+     * @return
+     */
+    public List<UnReadMessageCountDto> queryUnReadMessageCountByUserId( Long userId);
 }

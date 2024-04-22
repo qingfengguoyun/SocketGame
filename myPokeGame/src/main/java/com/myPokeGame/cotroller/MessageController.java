@@ -2,13 +2,17 @@ package com.myPokeGame.cotroller;
 
 import com.myPokeGame.entity.Message;
 import com.myPokeGame.entity.User;
+import com.myPokeGame.models.dto.UnReadMessageCountDto;
 import com.myPokeGame.models.pojo.MessagePojo;
 import com.myPokeGame.models.vo.MessageVo;
+import com.myPokeGame.models.vo.UnReadMessageCountVo;
+import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.service.messageService.MessageService;
 import com.myPokeGame.service.socketIoService.SocketIoEvents;
 import com.myPokeGame.service.socketIoService.SocketIoService;
 import com.myPokeGame.service.userService.UserService;
 import com.myPokeGame.utils.ConvertUtils;
+import com.myPokeGame.utils.JwtUtils;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,6 +42,9 @@ public class MessageController {
 
     @Autowired
     ConvertUtils convertUtils;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     @Value("${app-env.message-list-default}")
     Integer messageListDefault;
@@ -83,4 +90,13 @@ public class MessageController {
         return Result.success(vos);
     }
 
+
+    @ApiOperation(value = "查询未读私聊消息数量")
+    @PostMapping("/queryUnReadMessageCount")
+    public Result queryUnReadMessageCount(){
+        UserVo userVo = jwtUtils.validateToken();
+        List<UnReadMessageCountDto> dtos = messageService.queryUnReadMessageCountByUserId(userVo.getUserId());
+        List<UnReadMessageCountVo> vos = ConvertUtils.convert(dtos);
+        return Result.success(vos);
+    }
 }

@@ -2,7 +2,9 @@ package com.myPokeGame.cotroller;
 
 import com.myPokeGame.entity.User;
 import com.myPokeGame.models.vo.UserVo;
+import com.myPokeGame.service.messageService.MessageService;
 import com.myPokeGame.service.userService.UserService;
+import com.myPokeGame.utils.JwtUtils;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +27,9 @@ public class UserController {
 
     @Autowired
     Map<Long, Date> onlineUserMap;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     @ApiOperation(value = "保存用户")
     @PostMapping("/save")

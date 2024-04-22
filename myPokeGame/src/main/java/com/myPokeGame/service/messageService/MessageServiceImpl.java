@@ -5,6 +5,7 @@ import com.myPokeGame.entity.Message;
 import com.myPokeGame.entity.UnReadMessage;
 import com.myPokeGame.mapper.MessageMapper;
 import com.myPokeGame.mapper.UnReadMessageMapper;
+import com.myPokeGame.models.dto.UnReadMessageCountDto;
 import com.myPokeGame.models.pojo.MessagePojo;
 import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.utils.CommonUtils;
@@ -75,7 +76,7 @@ public class MessageServiceImpl implements MessageService {
         Message message = insertMessage(pojo);
         //将消息加入未读消息记录表
         UnReadMessage unReadMessage=new UnReadMessage();
-        ConvertUtils.convert(unReadMessage,message);
+        ConvertUtils.convert(message,unReadMessage);
         unReadMessageMapper.insert(unReadMessage);
         return message;
     }
@@ -98,5 +99,13 @@ public class MessageServiceImpl implements MessageService {
         }
 
         return messages;
+    }
+
+    @Override
+    public List<UnReadMessageCountDto> queryUnReadMessageCountByUserId(Long userId) {
+
+        UserVo userVo = jwtUtils.validateToken();
+        List<UnReadMessageCountDto> dtos = unReadMessageMapper.queryUnReadMessageCountByUserId(userId);
+        return dtos;
     }
 }
