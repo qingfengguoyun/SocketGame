@@ -17,4 +17,7 @@ public interface UnReadMessageMapper extends BaseMapper<UnReadMessage> {
                                                           @Param("receiveUserId")Long receiveUserId);
 
     List<UnReadMessageCountDto> queryUnReadMessageCountByUserId(@Param("userId") Long userId);
+
+    Integer deleteBySenderIdAndReceiverId(@Param("sendUserId")Long sendUserId,
+                                          @Param("receiveUserId")Long receiveUserId);
 }

@@ -17,6 +17,10 @@
         GROUP BY u.`id`
     </select>
 
+    <delete id="deleteBySenderIdAndReceiverId" >
+        delete from `un_read_message`  WHERE `send_user_id`=#{sendUserId} and `receive_user_id`=#{receiveUserId}
+    </delete>
+
 
 
 </mapper>

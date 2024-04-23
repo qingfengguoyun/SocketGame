@@ -26,6 +26,11 @@ public class MessageVo {
 
     Date date;
 
+    /**
+     * 是否为未读消息（仅在私聊时标注）
+     */
+    Boolean isUnRead=false;
+
     public static MessageVo convert(Message message){
         return null;
     }

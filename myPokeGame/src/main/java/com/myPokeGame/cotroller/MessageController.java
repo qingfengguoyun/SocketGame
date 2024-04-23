@@ -11,6 +11,7 @@ import com.myPokeGame.service.messageService.MessageService;
 import com.myPokeGame.service.socketIoService.SocketIoEvents;
 import com.myPokeGame.service.socketIoService.SocketIoService;
 import com.myPokeGame.service.userService.UserService;
+import com.myPokeGame.utils.AppEnvConstant;
 import com.myPokeGame.utils.ConvertUtils;
 import com.myPokeGame.utils.JwtUtils;
 import com.myPokeGame.utils.Result;
@@ -46,7 +47,7 @@ public class MessageController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @Value("${app-env.message-list-default}")
+    @Value("${app-env.messageListDefaultLength}")
     Integer messageListDefault;
 
 
@@ -60,7 +61,7 @@ public class MessageController {
     @ApiOperation(value = "查询最新信息")
     @GetMapping("/queryLatestMessages")
     public Result getLatestMessages(@RequestParam(required = false) Integer num){
-        num= !ObjectUtils.isEmpty(num)?num:messageListDefault;
+        num= !ObjectUtils.isEmpty(num)?num: AppEnvConstant.MESSAGE_LIST_DEFAULT_LENGTH;
         List<Message> messages = messageService.queryLastestMessages(num);
         List<MessageVo> voList=new LinkedList<>();
         voList=convertUtils.convert(messages,new MessageVo());
@@ -84,9 +85,9 @@ public class MessageController {
     @GetMapping("/getPrivateMessage")
     public Result getPrivateMesssageList(Long connectUserId,
                                          @RequestParam(required = false) Integer num){
-        num= !ObjectUtils.isEmpty(num)?num:messageListDefault;
-        List<Message> messages = messageService.queryLatestPrivteMessages(connectUserId, num);
-        List<MessageVo> vos = convertUtils.convert(messages,new MessageVo());
+        num= !ObjectUtils.isEmpty(num)?num:AppEnvConstant.MESSAGE_LIST_DEFAULT_LENGTH;
+        List<MessageVo> vos = messageService.queryLatestPrivteMessageVos(connectUserId, num);
+//        List<MessageVo> vos = convertUtils.convert(messages,new MessageVo());
         return Result.success(vos);
     }
 

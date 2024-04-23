@@ -45,4 +45,4 @@ jwt:
 
 #自定义项目配置
 app-env:
-  message-list-default: 8
+  messageListDefaultLength: 8

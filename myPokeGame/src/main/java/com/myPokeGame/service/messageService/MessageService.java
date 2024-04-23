@@ -18,13 +18,14 @@ public interface MessageService {
 
     public Message sendPrivateMessage(MessagePojo pojo);
 
+
     /**
      * 私聊界面查询全部记录
      * @param connectUserId 私聊对象Id
      * @param num 显示条数
      * @return
      */
-    public List<Message> queryLatestPrivteMessages(Long connectUserId,Integer num);
+    public List<MessageVo> queryLatestPrivteMessageVos(Long connectUserId,Integer num);
 
     /**
      * 查询用户未读的私聊消息数量

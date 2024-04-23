@@ -7,7 +7,9 @@ import com.myPokeGame.mapper.MessageMapper;
 import com.myPokeGame.mapper.UnReadMessageMapper;
 import com.myPokeGame.models.dto.UnReadMessageCountDto;
 import com.myPokeGame.models.pojo.MessagePojo;
+import com.myPokeGame.models.vo.MessageVo;
 import com.myPokeGame.models.vo.UserVo;
+import com.myPokeGame.utils.AppEnvConstant;
 import com.myPokeGame.utils.CommonUtils;
 import com.myPokeGame.utils.ConvertUtils;
 import com.myPokeGame.utils.JwtUtils;
@@ -31,6 +33,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    ConvertUtils convertUtils;
 
     /**
      * 服务层所有包含数据库增删改操作的方法均需添加事务处理：@Transactional
@@ -64,7 +69,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> queryLastestMessages(Integer num) {
         if(ObjectUtils.isEmpty(num)){
-            num=5;
+            num= AppEnvConstant.MESSAGE_LIST_DEFAULT_LENGTH;
         }
         List<Message> messages = messageMapper.queryLatestMessagesByDate(num);
         return messages;
@@ -81,24 +86,37 @@ public class MessageServiceImpl implements MessageService {
         return message;
     }
 
-    @Override
+
     @Transactional
-    public List<Message> queryLatestPrivteMessages(Long connectUserId, Integer num) {
+    List<Message> queryLatestPrivteMessages(Long connectUserId, Integer num) {
 
         //TODO:先找发送者为联系对象，接收者为自身的最早的未读记录，获得其生成时间
         UserVo userVo = jwtUtils.validateToken();
-        UnReadMessage eldestUnReadMessage = unReadMessageMapper.queryBySendUserIdAndReceiveUserId(connectUserId, userVo.getUserId());
         List<Message> messages=new LinkedList<>();
-        //如果存在未读消息执行以下
-        if(!ObjectUtils.isEmpty(eldestUnReadMessage)){
-            //TODO:从消息表中获取在最早未读记录生成时间后的消息
-            messages = messageMapper.queryPrivateMessagesByUnReadMessageId(connectUserId, userVo.getUserId(), eldestUnReadMessage.getMessageId(),num);
-        }
-        else{
-            messages = messageMapper.queryPrivateMessages(connectUserId, userVo.getUserId(),num);
-        }
-
+        messages = messageMapper.queryPrivateMessages(connectUserId, userVo.getUserId(),num);
         return messages;
+    }
+
+    @Override
+    @Transactional
+    public List<MessageVo> queryLatestPrivteMessageVos(Long connectUserId, Integer num) {
+        //TODO:先找发送者为联系对象，接收者为自身的最早的未读记录，获得其生成时间
+        UserVo userVo = jwtUtils.validateToken();
+        UnReadMessage eldestUnReadMessage = unReadMessageMapper.queryBySendUserIdAndReceiveUserId(connectUserId, userVo.getUserId());
+        List<Message> messages = messageMapper.queryPrivateMessages(connectUserId, userVo.getUserId(),num);
+        List<MessageVo> vos = convertUtils.convert(messages, new MessageVo());
+        //依据最早未读消息，给vo添加未读标识
+        if(!ObjectUtils.isEmpty(eldestUnReadMessage)){
+            vos.stream().forEach(t->{
+                //如果消息的时间晚于最早未读消息，且发送者不为自身
+                if(t.getDate().getTime()>=eldestUnReadMessage.getDate().getTime()&&t.getSendUser().getId()!=userVo.getUserId()){
+                    t.setIsUnRead(true);
+                }
+            });
+        }
+        //清除全部发送者为connectUser，接收者为userVo的未读消息记录
+        unReadMessageMapper.deleteBySenderIdAndReceiverId(connectUserId,userVo.getUserId());
+        return vos;
     }
 
     @Override
