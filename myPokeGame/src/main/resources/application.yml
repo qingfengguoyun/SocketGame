@@ -48,4 +48,5 @@ jwt:
 #自定义项目配置
 app-env:
   messageListDefaultLength: 8
-  imageStorage: /storage/image
+  # 路径前不能添加'/' , 否则将向上取一层文件夹
+  imageStorage: storage/image

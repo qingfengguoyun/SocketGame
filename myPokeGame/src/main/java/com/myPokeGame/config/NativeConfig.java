@@ -35,7 +35,6 @@ public class NativeConfig {
             try {
                 log.info("初始化图片仓库");
                 boolean mkdirs = file.mkdirs();
-                log.info(mkdirs+"");
                 log.info("图片仓库初始化成功");
             }catch(Exception e){
                 log.error("图片仓库初始化失败");
