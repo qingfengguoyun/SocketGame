@@ -1,6 +1,11 @@
 server:
   port: 8200
 spring:
+  #  servlet.multipart 设置单次上传文件的最大大小
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
   application:
     name: myPokeGame
   datasource:

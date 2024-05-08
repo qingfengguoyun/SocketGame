@@ -32,4 +32,10 @@ public class User extends BaseEntity{
 
     @TableField(value = "password")
     String password;
+
+    @TableField(value = "user_image_id")
+    String userImageId;
+
+    @TableField(value = "user_default_image")
+    String userDefaultImage;
 }
