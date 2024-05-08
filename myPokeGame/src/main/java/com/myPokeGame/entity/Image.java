@@ -18,5 +18,5 @@ public class Image extends BaseEntity {
     String imageType;
 
     String imageUrl;
-    
+
 }

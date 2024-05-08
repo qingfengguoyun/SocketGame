@@ -11,6 +11,8 @@ spring:
       &characterEncoding=UTF-8"
     username: root
     password: mysql
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${app-env.imageStorage}
 
 # netty-socketio 配置
 socketio:
@@ -46,3 +48,4 @@ jwt:
 #自定义项目配置
 app-env:
   messageListDefaultLength: 8
+  imageStorage: /storage/image
