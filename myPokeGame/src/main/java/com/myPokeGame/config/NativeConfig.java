@@ -21,23 +21,23 @@ public class NativeConfig {
         return new HashMap<Long,Date>();
     }
 
-    @Value("${app-env.imageStorage}")
-    private String imageStorage;
+    @Value("${app-env.fileStorage}")
+    private String fileStorage;
 
     @PostConstruct
     public void initConfig(){
-        File file=new File(imageStorage);
+        File file=new File(fileStorage);
         if(file.exists()){
-            log.info("图片仓库已存在");
+            log.info("文件仓库已存在");
         }
         log.info(file.isDirectory()+"");
         if(!file.exists()){
             try {
-                log.info("初始化图片仓库");
+                log.info("初始化文件仓库");
                 boolean mkdirs = file.mkdirs();
-                log.info("图片仓库初始化成功");
+                log.info("文件仓库初始化成功");
             }catch(Exception e){
-                log.error("图片仓库初始化失败");
+                log.error("文件仓库初始化失败");
             }
         }
     }
