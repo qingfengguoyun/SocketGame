@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,7 +50,7 @@ public class FileController {
     }
     @ApiOperation("批量上传文件")
     @PostMapping(value = "/uploadByBatch" ,headers = "content-type=multipart/form-data")
-    public Result saveUpLoadFile(MultipartFile[] files){
+    public Result saveUpLoadFile(@RequestParam("file") MultipartFile[] files){
         List<NativeFile> resList=new LinkedList<>();
         for (MultipartFile file:files){
             NativeFile nativeFile = nativeFileService.saveFile(file);
