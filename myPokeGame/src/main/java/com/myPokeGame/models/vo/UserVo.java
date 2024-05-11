@@ -28,4 +28,8 @@ public class UserVo {
 
     Date lastOnLineTime;
 
+    String userImageId;
+
+    String userDefaultImage;
+
 }
