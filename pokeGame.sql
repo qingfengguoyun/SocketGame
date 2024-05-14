@@ -16,20 +16,61 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`pokegame` /*!40100 DEFAULT CHARACTER SE
 
 USE `pokegame`;
 
+/*Table structure for table `image` */
+
+DROP TABLE IF EXISTS `image`;
+
+CREATE TABLE `image` (
+  `id` bigint(255) NOT NULL,
+  `image_name` varchar(255) DEFAULT NULL,
+  `uploader_id` bigint(255) DEFAULT NULL,
+  `image_suffix` varchar(255) DEFAULT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `md5` varchar(255) DEFAULT NULL,
+  `date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Table structure for table `message` */
+
+DROP TABLE IF EXISTS `message`;
+
+CREATE TABLE `message` (
+  `id` bigint(20) DEFAULT NULL,
+  `content` text,
+  `send_user_id` bigint(20) DEFAULT NULL,
+  `receive_user_id` bigint(20) DEFAULT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_broadcast` tinyint(1) DEFAULT '1',
+  `reply_message_id` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+/*Table structure for table `un_read_message` */
+
+DROP TABLE IF EXISTS `un_read_message`;
+
+CREATE TABLE `un_read_message` (
+  `id` bigint(20) NOT NULL,
+  `send_user_id` bigint(20) DEFAULT NULL,
+  `receive_user_id` bigint(20) DEFAULT NULL,
+  `message_id` bigint(20) DEFAULT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 /*Table structure for table `user` */
 
 DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
-  `user_id` bigint(255) NOT NULL,
+  `id` bigint(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `password` varchar(255) CHARACTER SET latin1 NOT NULL,
-  PRIMARY KEY (`user_id`)
+  `date` timestamp NULL DEFAULT NULL,
+  `user_image_id` bigint(255) DEFAULT NULL,
+  `user_default_image` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `user` */
-
-insert  into `user`(`user_id`,`user_name`,`password`) values (1773172597455552514,'qwe','123'),(1773192802873327618,'asd','123'),(1773610954870427649,'zxc','123'),(1773611378339942401,'qq','123'),(1773611979828301825,'aa','123');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

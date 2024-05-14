@@ -1,13 +1,16 @@
 package com.myPokeGame.utils;
 
 import com.myPokeGame.entity.Message;
+import com.myPokeGame.entity.NativeFile;
 import com.myPokeGame.entity.UnReadMessage;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.mapper.MessageMapper;
+import com.myPokeGame.mapper.NativeFileMapper;
 import com.myPokeGame.mapper.UserMapper;
 import com.myPokeGame.models.dto.UnReadMessageCountDto;
 import com.myPokeGame.models.vo.MessageVo;
 import com.myPokeGame.models.vo.UnReadMessageCountVo;
+import com.myPokeGame.models.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -23,6 +26,9 @@ public class ConvertUtils {
     @Autowired
     private MessageMapper messageMapper;
 
+    @Autowired
+    private NativeFileMapper nativeFileMapper;
+
     public static void convert(Message message,UnReadMessage unReadMessage){
         unReadMessage.setMessageId(message.getId());
         unReadMessage.setDate(message.getDate());
@@ -36,6 +42,13 @@ public class ConvertUtils {
         vo.setMessageContent(mes.getContent());
         vo.setMessageId(mes.getId());
         vo.setDate(mes.getDate());
+    }
+
+    public void convert(UserVo vo,User user){
+        vo.setUserId(user.getId());
+        vo.setUserName(user.getUserName());
+        vo.setUserImageId(user.getUserImageId());
+        vo.setUserDefaultImage(user.getUserDefaultImage());
     }
 
     /**

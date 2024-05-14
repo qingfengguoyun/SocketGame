@@ -4,6 +4,7 @@ import com.myPokeGame.entity.User;
 import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.service.messageService.MessageService;
 import com.myPokeGame.service.userService.UserService;
+import com.myPokeGame.utils.ConvertUtils;
 import com.myPokeGame.utils.JwtUtils;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
@@ -27,6 +28,9 @@ public class UserController {
 
     @Autowired
     Map<Long, Date> onlineUserMap;
+
+    @Autowired
+    ConvertUtils convertUtils;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -70,7 +74,8 @@ public class UserController {
         List<UserVo> resList=new LinkedList<>();
         Set<Long> longs = onlineUserMap.keySet();
         users.stream().forEach(t->{
-            UserVo vo = UserVo.builder().userId(t.getId()).userName(t.getUserName()).build();
+            UserVo vo = new UserVo();
+            convertUtils.convert(vo,t);
             if(longs.contains(t.getId())){
                 vo.setIsOnline(true);
                 vo.setLastOnLineTime(onlineUserMap.get(t.getId()));

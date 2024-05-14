@@ -1,0 +1,27 @@
+server:
+  port: 8300
+
+spring:
+  application:
+    name: imgServer
+  datasource:
+    url: "jdbc:mysql://localhost:3306/PokeGame?\
+        createDatabaseIfNotExist=true\
+        &serverTimezone=Asia/Shanghai\
+        &useUnicode=true\
+        &characterEncoding=UTF-8"
+    username: root
+    password: mysql
+  #  设置静态资源路径
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+
+
+mybatis-plus:
+  configuration:
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true #数据库下划线自动转驼峰
+
+
+app-env:
+  controllerRoute: "com.imgServer.controller"

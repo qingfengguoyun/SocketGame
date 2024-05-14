@@ -22,4 +22,6 @@ public class InterceptConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/user/queryAllName")
                 .excludePathPatterns(Arrays.asList(excludePathPatternsList));
     }
+
+
 }

@@ -1,6 +1,11 @@
 server:
   port: 8200
 spring:
+  #  servlet.multipart 设置单次上传文件的最大大小
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
   application:
     name: myPokeGame
   datasource:
@@ -11,6 +16,8 @@ spring:
       &characterEncoding=UTF-8"
     username: root
     password: mysql
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${app-env.fileStorage}
 
 # netty-socketio 配置
 socketio:
@@ -46,3 +53,5 @@ jwt:
 #自定义项目配置
 app-env:
   messageListDefaultLength: 8
+  # 路径前不能添加'/' , 否则将向上取一层文件夹
+  fileStorage: storage/file/
