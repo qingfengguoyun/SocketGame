@@ -3,7 +3,9 @@ package com.myPokeGame.service.imageService;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.myPokeGame.entity.NativeFile;
 import com.myPokeGame.mapper.NativeFileMapper;
+import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.utils.CommonUtils;
+import com.myPokeGame.utils.JwtUtils;
 import com.myPokeGame.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,9 @@ public class NativeFileServiceImpl implements NativeFileService {
     @Autowired
     NativeFileMapper nativeFileMapper;
 
+    @Autowired
+    JwtUtils jwtUtils;
+
 
     @Override
     public NativeFile saveFile(NativeFile nativeFileInfo) {
@@ -40,6 +45,9 @@ public class NativeFileServiceImpl implements NativeFileService {
             //验证MD5是否重复，若重复则不执行保存，仅添加数据库记录
             String md5 = CommonUtils.calcMd5(file.getInputStream());
             NativeFile nativeFileInfo =new NativeFile();
+            // 依据Authority添加用户id
+            UserVo userVo = jwtUtils.validateToken();
+            nativeFileInfo.setUploaderId(userVo.getUserId());
             List<NativeFile> nativeFiles = nativeFileMapper.queryByMd5(md5);
             if(ObjectUtils.isEmpty(nativeFiles)){
                 nativeFileInfo.setFileName(file.getOriginalFilename());
