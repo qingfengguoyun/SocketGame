@@ -3,6 +3,7 @@ package com.myPokeGame.cotroller;
 import com.myPokeGame.entity.NativeFile;
 import com.myPokeGame.exceptions.NativeException;
 import com.myPokeGame.mapper.NativeFileMapper;
+import com.myPokeGame.models.vo.NativeFileVo;
 import com.myPokeGame.service.imageService.NativeFileService;
 import com.myPokeGame.utils.CommonUtils;
 import com.myPokeGame.utils.Result;
@@ -32,6 +33,12 @@ public class FileController {
 
     @Value("${app-env.fileStorage}")
     private String fileStore;
+
+    @Value("${app-env.defaultPage}")
+    private Integer defaultPage;
+
+    @Value("${app-env.defaultPageSize}")
+    private Integer defaultPageSize;
 
     @Autowired
     private NativeFileService nativeFileService;
@@ -80,6 +87,20 @@ public class FileController {
                 throw new NativeException("图片未找到");
             }
         }
+    }
+
+    @ApiOperation("分页获取文件")
+    @GetMapping("/getFilesByPage/{currentPage}/{pageSize}")
+    public Result getFilesByPage(@PathVariable(required = false) Integer currentPage,
+                               @PathVariable(required = false) Integer pageSize){
+        if(ObjectUtils.isEmpty(currentPage)){
+            currentPage=defaultPage;
+        }
+        if(ObjectUtils.isEmpty(pageSize)){
+            pageSize=defaultPageSize;
+        }
+        List<NativeFileVo> nativeFileVos = nativeFileService.queryFilesByPage(currentPage, pageSize);
+        return Result.success(nativeFileVos);
     }
 
 }

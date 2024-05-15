@@ -8,4 +8,8 @@
         SELECT * FROM t_nativeFile t WHERE t.`md5` = #{md5}
     </select>
 
+    <select id="queryAll" resultType="com.myPokeGame.entity.NativeFile">
+        SELECT * FROM t_nativeFile t
+    </select>
+
 </mapper>
