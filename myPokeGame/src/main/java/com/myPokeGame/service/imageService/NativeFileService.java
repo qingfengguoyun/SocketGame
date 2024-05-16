@@ -2,6 +2,7 @@ package com.myPokeGame.service.imageService;
 
 import com.myPokeGame.entity.NativeFile;
 import com.myPokeGame.models.vo.NativeFileVo;
+import com.myPokeGame.utils.NativePage;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface NativeFileService {
 
     public NativeFile saveFile(MultipartFile file);
 
-    public List<NativeFileVo> queryFilesByPage(Integer currentPage, Integer pageSize);
+    public NativePage<NativeFileVo> queryFilesByPage(Integer currentPage, Integer pageSize);
 }

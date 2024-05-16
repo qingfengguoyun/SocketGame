@@ -60,7 +60,9 @@ public class ConverterConfig implements WebMvcConfigurer {
         //设置FastJsonHttpMessageConverter
         FastJsonHttpMessageConverter fastJsonHttpMessageConverter=new FastJsonHttpMessageConverter();
 //       将空的集合序列化为 []，使用日期格式进行序列化以及禁用循环引用检测。
-        config.setSerializerFeatures(SerializerFeature.WriteNullListAsEmpty,
+        config.setSerializerFeatures(
+                SerializerFeature.WriteMapNullValue,
+                SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.WriteDateUseDateFormat,
                 SerializerFeature.DisableCircularReferenceDetect);
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");

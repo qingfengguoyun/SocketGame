@@ -9,10 +9,8 @@ import com.myPokeGame.mapper.NativeFileMapper;
 import com.myPokeGame.mapper.UserMapper;
 import com.myPokeGame.models.vo.NativeFileVo;
 import com.myPokeGame.models.vo.UserVo;
-import com.myPokeGame.utils.CommonUtils;
-import com.myPokeGame.utils.JwtUtils;
-import com.myPokeGame.utils.NativePage;
-import com.myPokeGame.utils.Result;
+import com.myPokeGame.utils.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,10 +22,14 @@ import java.io.IOException;
 import java.util.*;
 
 @Service
+@Slf4j
 public class NativeFileServiceImpl implements NativeFileService {
 
     @Value("${app-env.fileStorage}")
     private String fileStore;
+
+    @Value("${app-env.filePreviewStorage}")
+    private String filePreviewStore;
 
     @Autowired
     NativeFileMapper nativeFileMapper;
@@ -66,6 +68,12 @@ public class NativeFileServiceImpl implements NativeFileService {
                 FileOutputStream fileOutputStream = new FileOutputStream(savedFile);
                 fileOutputStream.write(file.getBytes());
                 fileOutputStream.close();
+                //如果是图片则生成预览图
+                if(ImageUtils.isImage(url)){
+                    String previewImageUrl = ImageUtils.getPreviewImage(savedFile, filePreviewStore, 198);
+                    log.info("previewImageUrl:"+previewImageUrl);
+                    nativeFileInfo.setFilePreviewUrl(previewImageUrl);
+                }
                 nativeFileInfo.setMd5(md5);
                 nativeFileInfo.setFileUrl(url);
                 nativeFileInfo.setFileSuffix(CommonUtils.getSuffix(file.getOriginalFilename()));
@@ -73,6 +81,7 @@ public class NativeFileServiceImpl implements NativeFileService {
             }else{
                 nativeFileInfo.setFileName(file.getOriginalFilename());
                 nativeFileInfo.setFileUrl(nativeFiles.get(0).getFileUrl());
+                nativeFileInfo.setFilePreviewUrl(nativeFiles.get(0).getFilePreviewUrl());
                 nativeFileInfo.setMd5(md5);
                 nativeFileInfo.setFileSuffix(CommonUtils.getSuffix(file.getOriginalFilename()));
                 saveFile(nativeFileInfo);
@@ -85,7 +94,7 @@ public class NativeFileServiceImpl implements NativeFileService {
     }
 
     @Override
-    public List<NativeFileVo> queryFilesByPage(Integer currentPage,Integer pageSize){
+    public NativePage<NativeFileVo> queryFilesByPage(Integer currentPage,Integer pageSize){
         IPage<NativeFile> page=new Page<>(currentPage,pageSize);
         nativeFileMapper.queryAll(page);
         List<NativeFile> records = page.getRecords();
@@ -108,7 +117,9 @@ public class NativeFileServiceImpl implements NativeFileService {
             }
             resList.add(vo);
         }
-        return resList;
+        NativePage<NativeFileVo> nativePage=NativePage.convertPageInfo(page);
+        nativePage.setData(resList);
+        return nativePage;
     }
 
 }

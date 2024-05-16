@@ -24,6 +24,9 @@ public class NativeConfig {
     @Value("${app-env.fileStorage}")
     private String fileStorage;
 
+    @Value("${app-env.filePreviewStorage}")
+    private String filePreviewStorage;
+
     @PostConstruct
     public void initConfig(){
         File file=new File(fileStorage);
@@ -38,6 +41,21 @@ public class NativeConfig {
                 log.info("文件仓库初始化成功");
             }catch(Exception e){
                 log.error("文件仓库初始化失败");
+            }
+        }
+
+        file=new File(filePreviewStorage);
+        if(file.exists()){
+            log.info("文件预览仓库已存在");
+        }
+        log.info(file.isDirectory()+"");
+        if(!file.exists()){
+            try {
+                log.info("初始化文件预览仓库");
+                boolean mkdirs = file.mkdirs();
+                log.info("文件预览仓库初始化成功");
+            }catch(Exception e){
+                log.error("文件预览仓库初始化失败");
             }
         }
     }

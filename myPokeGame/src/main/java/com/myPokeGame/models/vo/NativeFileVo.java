@@ -26,6 +26,8 @@ public class NativeFileVo {
 
     String fileUrl;
 
+    String filePreviewUrl;
+
     String fileType;
 
     Date date;
@@ -41,6 +43,7 @@ public class NativeFileVo {
         vo.setFileSuffix(nativeFile.getFileSuffix());
         vo.setFileType(nativeFile.getFileType());
         vo.setFileUrl(nativeFile.getFileUrl());
+        vo.setFilePreviewUrl(nativeFile.getFilePreviewUrl());
         vo.setDate(nativeFile.getDate());
         return vo;
     }
@@ -56,6 +59,7 @@ public class NativeFileVo {
         vo.setFileSuffix(nativeFile.getFileSuffix());
         vo.setFileType(nativeFile.getFileType());
         vo.setFileUrl(nativeFile.getFileUrl());
+        vo.setFilePreviewUrl(nativeFile.getFilePreviewUrl());
         vo.setDate(nativeFile.getDate());
         return vo;
     }

@@ -18,6 +18,11 @@ public class CommonUtils {
         return ObjectUtils.isEmpty(obj)?null:obj;
     }
 
+    /**
+     * 计算文件MD5
+     * @param inputStream
+     * @return
+     */
     public static String calcMd5(InputStream inputStream){
         try {
             return DigestUtils.md5Hex(inputStream);
@@ -27,6 +32,10 @@ public class CommonUtils {
         return "";
     }
 
+    /**
+     * 获取随机uuid
+     * @return
+     */
     public static String getRandomUuid(){
         return IdUtil.randomUUID();
     }

@@ -6,6 +6,7 @@ import com.myPokeGame.mapper.NativeFileMapper;
 import com.myPokeGame.models.vo.NativeFileVo;
 import com.myPokeGame.service.imageService.NativeFileService;
 import com.myPokeGame.utils.CommonUtils;
+import com.myPokeGame.utils.NativePage;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -33,6 +34,9 @@ public class FileController {
 
     @Value("${app-env.fileStorage}")
     private String fileStore;
+
+    @Value("${app-env.filePreviewStorage}")
+    private String filePreviewStore;
 
     @Value("${app-env.defaultPage}")
     private Integer defaultPage;
@@ -89,8 +93,36 @@ public class FileController {
         }
     }
 
+    @ApiOperation("根据ID获取预览图片")
+    @GetMapping("/getPreviewImage/{imageId}")
+    public void getPreviewImage(@PathVariable("imageId") Long imageId){
+        try {
+            NativeFile nativeFile = nativeFileMapper.selectById(imageId);
+            if(!ObjectUtils.isEmpty(nativeFile)){
+                BufferedImage image = ImageIO.read(new FileInputStream(filePreviewStore+ nativeFile.getFilePreviewUrl()));
+                response.setContentType("image/"+nativeFile.getFileSuffix());
+                ServletOutputStream outputStream = response.getOutputStream();
+                ImageIO.write(image,nativeFile.getFileSuffix(),outputStream);
+            }
+
+        } catch (Exception e) {
+            if( e instanceof FileNotFoundException){
+                throw new NativeException("图片未找到");
+            }
+        }
+    }
+
+
+    /**
+     * @GetMapping 和 @PostMapping 可以传递url对象，同时匹配多个路径
+     * 用于解决 @PathVariable(required = false) ，不传递参数提示找不到路径的问题
+     */
     @ApiOperation("分页获取文件")
-    @GetMapping("/getFilesByPage/{currentPage}/{pageSize}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "currentPage", value = "当前页码", dataType = "Integer", paramType = "path", defaultValue = "1",required = false),
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "Integer", paramType = "path", defaultValue = "5",required = false)
+    })
+    @GetMapping({"/getFilesByPage/{currentPage}/{pageSize}","/getFilesByPage/{currentPage}","/getFilesByPage"})
     public Result getFilesByPage(@PathVariable(required = false) Integer currentPage,
                                @PathVariable(required = false) Integer pageSize){
         if(ObjectUtils.isEmpty(currentPage)){
@@ -99,8 +131,8 @@ public class FileController {
         if(ObjectUtils.isEmpty(pageSize)){
             pageSize=defaultPageSize;
         }
-        List<NativeFileVo> nativeFileVos = nativeFileService.queryFilesByPage(currentPage, pageSize);
-        return Result.success(nativeFileVos);
+        NativePage<NativeFileVo> nativePage = nativeFileService.queryFilesByPage(currentPage, pageSize);
+        return Result.success(nativePage);
     }
 
 }

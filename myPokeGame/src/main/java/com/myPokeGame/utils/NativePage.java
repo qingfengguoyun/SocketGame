@@ -40,4 +40,13 @@ public class NativePage<T> {
         return nativePage;
     }
 
+    public static NativePage convertPageInfo(IPage iPage){
+        NativePage nativePage = new NativePage<>();
+        nativePage.setTotalPages(iPage.getPages());
+        nativePage.setPageSize(iPage.getSize());
+        nativePage.setTotolCount(iPage.getTotal());
+        nativePage.setCurrentPage(iPage.getCurrent());
+        return nativePage;
+    }
+
 }

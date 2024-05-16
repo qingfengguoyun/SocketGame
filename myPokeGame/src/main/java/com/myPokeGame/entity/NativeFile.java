@@ -32,6 +32,12 @@ public class NativeFile extends BaseEntity {
     @TableField("file_url")
     String fileUrl;
 
+    /**
+     * 文件预览图路径
+     */
+    @TableField("file_preview_url")
+    String filePreviewUrl;
+
     @TableField("file_type")
     String fileType;
 
