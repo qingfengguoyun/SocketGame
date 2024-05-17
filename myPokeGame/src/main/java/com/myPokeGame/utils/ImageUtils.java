@@ -1,5 +1,8 @@
 package com.myPokeGame.utils;
 
+import net.coobird.thumbnailator.Thumbnails;
+import org.apache.poi.hpsf.Thumbnail;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -47,6 +50,23 @@ public class ImageUtils {
             String formatName = outputImagePath.substring(outputImagePath.lastIndexOf(".") + 1);
             // 将缩放后的图像保存到输出文件
             ImageIO.write(outputImage, formatName, new File(outputImagePath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outputImageFileName;
+    }
+
+    public static String getCompressImage(File orgImage,String storageFolder){
+        File storage=new File(storageFolder);
+        if(!storage.exists()){
+            storage.mkdirs();
+        }
+        String orgImageName = orgImage.getName();
+        String[] strs = orgImageName.split("\\.");
+        String outputImageFileName=strs[0]+"_preview."+strs[1];
+        String outputImagePath=storageFolder+strs[0]+"_preview."+strs[1];
+        try {
+            Thumbnails.of(orgImage).scale(1).outputQuality(0.2).toFile(outputImagePath);
         } catch (IOException e) {
             e.printStackTrace();
         }

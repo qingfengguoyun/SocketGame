@@ -70,7 +70,8 @@ public class NativeFileServiceImpl implements NativeFileService {
                 fileOutputStream.close();
                 //如果是图片则生成预览图
                 if(ImageUtils.isImage(url)){
-                    String previewImageUrl = ImageUtils.getPreviewImage(savedFile, filePreviewStore, 198);
+                    String previewImageUrl = ImageUtils.getCompressImage(savedFile,filePreviewStore);
+//                            ImageUtils.getPreviewImage(savedFile, filePreviewStore, 198);
                     log.info("previewImageUrl:"+previewImageUrl);
                     nativeFileInfo.setFilePreviewUrl(previewImageUrl);
                 }
