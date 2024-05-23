@@ -44,4 +44,24 @@ public class CommonUtils {
         int index = str.lastIndexOf(".");
         return index==-1?"":str.substring(index+1);
     }
+
+    public static String getContentType(String fileSuffix){
+        switch (fileSuffix.toLowerCase()) {
+            case "jpg":
+            case "jpeg":
+                return("image/jpeg");
+            case "png":
+                return("image/png");
+            case "gif":
+                return("image/gif");
+            case "bmp":
+                return("image/bmp");
+            case "webp":
+                return("image/webp");
+            case "svg":
+                return("image/svg+xml");
+            default:
+                return("application/octet-stream"); // 默认设置为二进制流类型
+        }
+    }
 }

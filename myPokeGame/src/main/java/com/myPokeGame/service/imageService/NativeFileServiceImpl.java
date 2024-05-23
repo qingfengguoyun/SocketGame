@@ -13,12 +13,13 @@ import com.myPokeGame.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.*;
 
 @Service
@@ -121,6 +122,31 @@ public class NativeFileServiceImpl implements NativeFileService {
         NativePage<NativeFileVo> nativePage=NativePage.convertPageInfo(page);
         nativePage.setData(resList);
         return nativePage;
+    }
+
+    @Override
+    public void downLoadFile(Long fileId, HttpServletResponse response){
+        NativeFile file = nativeFileMapper.selectById(fileId);
+//        ClassPathResource resource = new ClassPathResource(fileStore+file.getFileUrl());
+        File resourceFile=new File(fileStore+file.getFileUrl());
+        //设置响应头
+        response.setContentType(CommonUtils.getContentType(file.getFileSuffix()));
+        response.setHeader("Content-Disposition", "attachment;filename=\"" + file.getFileName() + "\"");
+        try {
+            InputStream inputStream = new FileInputStream(resourceFile);
+            ServletOutputStream outputStream = response.getOutputStream();
+            byte[] buffer=new byte[1024];
+            int len;
+            while((len=inputStream.read(buffer))!=-1){
+                outputStream.write(buffer,0,len);
+            }
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

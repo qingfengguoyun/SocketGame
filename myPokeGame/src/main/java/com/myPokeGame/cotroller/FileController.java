@@ -135,4 +135,10 @@ public class FileController {
         return Result.success(nativePage);
     }
 
+    @ApiOperation("下载文件")
+    @GetMapping("/downloadFile")
+    public void downloadFileById(Long fileId,HttpServletResponse response){
+        nativeFileService.downLoadFile(fileId,response);
+    }
+
 }
