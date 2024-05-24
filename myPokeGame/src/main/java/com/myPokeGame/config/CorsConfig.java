@@ -17,6 +17,7 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedMethods(ORIGINS) // 当前站点支持的跨域请求类型是什么
                 .maxAge(3601)// 超时时长设置为1小时。 时间单位是秒。
                 //用于前端从header获取指定字段
-                .exposedHeaders("token","Authorization"); //设置可被前端访问的header字段,"*"表示暴露所有header字段
+                //Content-Disposition用于文件下载时存储文件名
+                .exposedHeaders("token","Authorization","Content-Disposition"); //设置可被前端访问的header字段,"*"表示暴露所有header字段
     }
 }

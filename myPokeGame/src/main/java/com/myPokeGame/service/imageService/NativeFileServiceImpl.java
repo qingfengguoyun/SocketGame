@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.*;
 
 @Service
@@ -131,8 +132,10 @@ public class NativeFileServiceImpl implements NativeFileService {
         File resourceFile=new File(fileStore+file.getFileUrl());
         //设置响应头
         response.setContentType(CommonUtils.getContentType(file.getFileSuffix()));
-        response.setHeader("Content-Disposition", "attachment;filename=\"" + file.getFileName() + "\"");
         try {
+            //响应首部 Access-Control-Expose-Headers 为控制暴露的开关，列出哪些首部可以作为响应的一部分暴露给外部
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName(),"UTF-8"));
             InputStream inputStream = new FileInputStream(resourceFile);
             ServletOutputStream outputStream = response.getOutputStream();
             byte[] buffer=new byte[1024];
@@ -144,7 +147,7 @@ public class NativeFileServiceImpl implements NativeFileService {
             outputStream.close();
             inputStream.close();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
