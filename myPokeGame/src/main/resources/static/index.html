@@ -1,72 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+  <!-- Toastr style -->
+  <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+  <link href="css/animate.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/mystyle.css" rel="stylesheet">
+  <title>Vite App</title>
+  <script type="module" crossorigin src="/assets/index-DFuHR68e.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CLPkwJRv.css">
 </head>
+
 <body>
-	<div id="index">
-		this is static index Page
-		<div>
-			<label>姓名：</label><textarea v-model="uName" id="uName" type="text" /></textarea>
-			<label>密码：</label><textarea v-model="pword" id="pword" type="text" /></textarea>
-		</div>
-		<div>
-			{{uName}}
-			{{pword}}
-		</div>
-		<div id="frontPage"></div>
-		<button @click="sign"> 注册</button>
-		<button @click="loadContent"> 登录</button>
-	</div>
-
+  <div id="app"></div>
 </body>
-</html>
-<script src="https://cdn.staticfile.org/vue/3.2.36/vue.global.min.js"></script>
-<!-- <script src="js/indexScript.js"></script> -->
-<script src="js/User.js"></script>
-<script src="js/jquery-3.1.1.min.js"></script>
-<!-- <script src="vues/frontPage.vue"></script> -->
-<script>	
-	
 
-	let user=new User();
-	user.userName="qwe";
-	console.log(user.userName);
-	let userName;
-	let password;
-	let app={
-		data(){
-			return{
-				uName: user.userName,
-				pword: user.password,
-			}
-		},
-		methods:{
-			sign,
-			login,
-			loadContent
-		}
-	}
-	
-	Vue.createApp(app).mount("#index");
-	function sign(){
-		user.userName=$("#uName").val();
-		user.password=$("#pword").val();
-		console.log(user.userName);
-		console.log(user.password);
-		// console.log($('#uName').val());
-		// console.log(password);
-	}
-	
-	function loadContent() {
-		console.log("did");
-		$("#frontPage").load("front.html");
-	}
-	function login(){
-		// window.location.href = `html/frontPage.html?user=${JSON.stringify(user)}`;
-		$("#frontPage").innerHtml()
-	}
-	
-	
-</script>
+</html>
+<!-- Mainly scripts -->
+<script src="js/jquery-3.1.1.min.js"></script>
+<!-- <script src="js/popper.min.js"></script> -->
+<script src="js/bootstrap.js"></script>
+<!-- <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script> -->
+
+<!-- Custom and plugin javascript -->
+<!-- <script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script> -->

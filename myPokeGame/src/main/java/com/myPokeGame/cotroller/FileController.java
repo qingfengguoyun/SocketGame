@@ -24,6 +24,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,6 +83,8 @@ public class FileController {
             if(!ObjectUtils.isEmpty(nativeFile)){
                 BufferedImage image = ImageIO.read(new FileInputStream(fileStore+ nativeFile.getFileUrl()));
                 response.setContentType("image/"+nativeFile.getFileSuffix());
+                response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+                response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(nativeFile.getFileName(),"UTF-8"));
                 ServletOutputStream outputStream = response.getOutputStream();
                 ImageIO.write(image,nativeFile.getFileSuffix(),outputStream);
             }
@@ -101,6 +104,8 @@ public class FileController {
             if(!ObjectUtils.isEmpty(nativeFile)){
                 BufferedImage image = ImageIO.read(new FileInputStream(filePreviewStore+ nativeFile.getFilePreviewUrl()));
                 response.setContentType("image/"+nativeFile.getFileSuffix());
+                response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+                response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(nativeFile.getFileName(),"UTF-8"));
                 ServletOutputStream outputStream = response.getOutputStream();
                 ImageIO.write(image,nativeFile.getFileSuffix(),outputStream);
             }

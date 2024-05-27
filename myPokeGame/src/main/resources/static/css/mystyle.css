@@ -1,0 +1,51 @@
+.chat-list{
+    /* background: #ffffff; */
+    padding: 15px;
+    height: 600px;
+    overflow-y: auto;
+}
+
+.font-message{
+    font-size: 1.5rem;
+}
+
+.chatRoomStyle{
+    width: calc(100% - 400px);
+}
+
+.sidebar{
+    width: 220px;
+}
+
+.sidebar-mini{
+    width: 100px;
+}
+
+.front-page-main{
+    width: calc(100%)
+}
+
+.sidebar-display{
+    width: 220px;
+}
+.front-page-main-with-mini-sidebar{
+    width: calc(100%)
+}
+.preview-image{
+    height: 150px;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+    .chatRoomStyle{
+        width: 100%;
+    }
+    .sidebar{
+        display: none;
+    }
+    .front-page-main{
+        width: calc(100%)
+    }
+}
+
+
