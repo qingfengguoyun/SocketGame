@@ -9,7 +9,7 @@ spring:
   application:
     name: myPokeGame
   datasource:
-    url: "jdbc:mysql://localhost:3306/PokeGame?\
+    url: "jdbc:mysql://localhost:3306/pokegame?\
       createDatabaseIfNotExist=true\
       &serverTimezone=Asia/Shanghai\
       &useUnicode=true\

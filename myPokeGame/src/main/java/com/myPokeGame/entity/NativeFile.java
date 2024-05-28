@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@TableName(value = "t_nativeFile")
+@TableName(value = "t_nativefile")
 public class NativeFile extends BaseEntity {
 
     @TableField("file_name")

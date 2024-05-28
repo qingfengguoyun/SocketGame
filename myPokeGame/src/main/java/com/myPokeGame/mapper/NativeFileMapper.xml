@@ -5,11 +5,11 @@
 <mapper namespace="com.myPokeGame.mapper.NativeFileMapper">
 
     <select id="queryByMd5" resultType="com.myPokeGame.entity.NativeFile">
-        SELECT * FROM t_nativeFile t WHERE t.`md5` = #{md5}
+        SELECT * FROM t_nativefile t WHERE t.`md5` = #{md5}
     </select>
 
     <select id="queryAll" resultType="com.myPokeGame.entity.NativeFile">
-        SELECT * FROM t_nativeFile t
+        SELECT * FROM t_nativefile t
     </select>
 
 </mapper>
