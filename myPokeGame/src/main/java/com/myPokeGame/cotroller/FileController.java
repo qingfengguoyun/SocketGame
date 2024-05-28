@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -28,6 +29,7 @@ import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/file")
 @Api(tags = "文件接口")
@@ -103,11 +105,18 @@ public class FileController {
             NativeFile nativeFile = nativeFileMapper.selectById(imageId);
             if(!ObjectUtils.isEmpty(nativeFile)){
                 BufferedImage image = ImageIO.read(new FileInputStream(filePreviewStore+ nativeFile.getFilePreviewUrl()));
-                response.setContentType("image/"+nativeFile.getFileSuffix());
+
                 response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
                 response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(nativeFile.getFileName(),"UTF-8"));
-                ServletOutputStream outputStream = response.getOutputStream();
-                ImageIO.write(image,nativeFile.getFileSuffix(),outputStream);
+                if("png".equals(nativeFile.getFileSuffix())){
+                    ServletOutputStream outputStream = response.getOutputStream();
+                    response.setContentType("image/"+"jpg");
+                    ImageIO.write(image,"jpg",outputStream);
+                }else{
+                    ServletOutputStream outputStream = response.getOutputStream();
+                    response.setContentType("image/"+nativeFile.getFileSuffix());
+                    ImageIO.write(image,nativeFile.getFileSuffix(),outputStream);
+                }
             }
 
         } catch (Exception e) {

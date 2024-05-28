@@ -1,5 +1,6 @@
 package com.myPokeGame.utils;
 
+import cn.hutool.core.io.FileUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.poi.hpsf.Thumbnail;
 
@@ -63,14 +64,35 @@ public class ImageUtils {
         }
         String orgImageName = orgImage.getName();
         String[] strs = orgImageName.split("\\.");
-        String outputImageFileName=strs[0]+"_preview."+strs[1];
-        String outputImagePath=storageFolder+strs[0]+"_preview."+strs[1];
-        try {
-            Thumbnails.of(orgImage).scale(1).outputQuality(0.2).toFile(outputImagePath);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String suffix=strs[1];
+        if("gif".equals(suffix)){
+            String outputImageFileName=strs[0]+"_preview."+strs[1];
+            String outputImagePath=storageFolder+strs[0]+"_preview."+strs[1];
+            File preivewFile=new File(outputImagePath);
+            FileUtil.copy(orgImage,preivewFile,false);
+            return outputImageFileName;
         }
-        return outputImageFileName;
+        else if("png".equals(suffix)){
+            String outputImageFileName=strs[0]+"_preview."+"jpg";
+            String outputImagePath=storageFolder+strs[0]+"_preview."+"jpg";
+            try {
+                Thumbnails.of(orgImage).scale(1f).toFile(outputImagePath);
+                Thumbnails.of(orgImage).scale(1f).outputQuality(0.2f).toFile(outputImagePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return outputImageFileName;
+        }
+        else{
+            String outputImageFileName=strs[0]+"_preview."+strs[1];
+            String outputImagePath=storageFolder+strs[0]+"_preview."+strs[1];
+            try {
+                Thumbnails.of(orgImage).scale(1).outputQuality(0.2).toFile(outputImagePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return outputImageFileName;
+        }
     }
 
     public static Boolean isImage(String fileName){
