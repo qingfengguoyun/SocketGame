@@ -17,6 +17,8 @@ public class ImageUtils {
 
     static List<String> imageSuffix=Arrays.asList("jpg","jpeg","png");
 
+    static float previewMaxHeight=1200f;
+
     public static String getPreviewImage(File orgImage,String storageFolder,Integer previewWidth){
         File storage=new File(storageFolder);
         if(!storage.exists()){
@@ -65,6 +67,17 @@ public class ImageUtils {
         String orgImageName = orgImage.getName();
         String[] strs = orgImageName.split("\\.");
         String suffix=strs[1];
+        // 压缩图片长宽，高度大于previewMaxHeight时压缩至previewMaxHeight
+        float scale=1f;
+        try {
+            BufferedImage image=ImageIO.read(orgImage);
+            int height = image.getHeight();
+            if(height>=previewMaxHeight){
+                scale=(previewMaxHeight/image.getHeight());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if("gif".equals(suffix)){
             String outputImageFileName=strs[0]+"_preview."+strs[1];
             String outputImagePath=storageFolder+strs[0]+"_preview."+strs[1];
@@ -77,7 +90,7 @@ public class ImageUtils {
             String outputImagePath=storageFolder+strs[0]+"_preview."+"jpg";
             try {
                 Thumbnails.of(orgImage).scale(1f).toFile(outputImagePath);
-                Thumbnails.of(orgImage).scale(1f).outputQuality(0.2f).toFile(outputImagePath);
+                Thumbnails.of(orgImage).scale(scale).outputQuality(0.4f).toFile(outputImagePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -87,7 +100,7 @@ public class ImageUtils {
             String outputImageFileName=strs[0]+"_preview."+strs[1];
             String outputImagePath=storageFolder+strs[0]+"_preview."+strs[1];
             try {
-                Thumbnails.of(orgImage).scale(1).outputQuality(0.2).toFile(outputImagePath);
+                Thumbnails.of(orgImage).scale(scale).outputQuality(0.4).toFile(outputImagePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
