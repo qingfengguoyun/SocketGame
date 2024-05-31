@@ -18,6 +18,13 @@ public interface MessageService {
 
     public Message sendPrivateMessage(MessagePojo pojo);
 
+    /**
+     * 根据消息id查询在该消息前的8条消息
+     * @param msgId
+     * @return
+     */
+    public List<Message> queryHistroyMessageByMsgId(Long msgId);
+
 
     /**
      * 私聊界面查询全部记录
@@ -26,6 +33,14 @@ public interface MessageService {
      * @return
      */
     public List<MessageVo> queryLatestPrivteMessageVos(Long connectUserId,Integer num);
+
+    /**
+     * 私聊界面查询历史记录
+     * @param msgId 最后一条记录的id
+     * @param userIds 相关用户的id
+     * @return
+     */
+    public List<MessageVo> queryHistoryPrivateMesssgeVosByMsgIdAndUserIds(Long msgId,List<Long> userIds);
 
     /**
      * 查询用户未读的私聊消息数量

@@ -3,6 +3,7 @@ package com.myPokeGame.cotroller;
 import com.myPokeGame.entity.Message;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.models.dto.UnReadMessageCountDto;
+import com.myPokeGame.models.pojo.QueryHistoryPrivateMessagePojo;
 import com.myPokeGame.models.pojo.MessagePojo;
 import com.myPokeGame.models.vo.MessageVo;
 import com.myPokeGame.models.vo.UnReadMessageCountVo;
@@ -19,7 +20,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,5 +99,20 @@ public class MessageController {
         List<UnReadMessageCountDto> dtos = messageService.queryUnReadMessageCountByUserId(userVo.getUserId());
         List<UnReadMessageCountVo> vos = ConvertUtils.convert(dtos);
         return Result.success(vos);
+    }
+
+    @ApiOperation(value = "根据消息id查询历史消息")
+    @GetMapping("/queryHistoryMessagesByMsgId")
+    public Result queryHistoryMessagesByMsgId(@RequestParam("msgId") Long msgId){
+        List<Message> messages = messageService.queryHistroyMessageByMsgId(msgId);
+        List<MessageVo> vos = convertUtils.convert(messages, new MessageVo());
+        return Result.success(vos);
+    }
+
+    @ApiOperation(value = "根据消息id和用户id查询历史私聊消息")
+    @PostMapping("/queryHistoryPrivateMessagesByMsgIdAndUserIds")
+    public Result queryHistoryPrivateMessagesByMsgIdAndUserIds(@RequestBody QueryHistoryPrivateMessagePojo pojo){
+        List<MessageVo> messageVos = messageService.queryHistoryPrivateMesssgeVosByMsgIdAndUserIds(pojo.getMsgId(), pojo.getUserIds());
+        return Result.success(messageVos);
     }
 }

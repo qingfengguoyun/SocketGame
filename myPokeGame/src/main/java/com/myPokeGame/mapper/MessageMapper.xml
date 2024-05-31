@@ -33,6 +33,29 @@
         AND t.`is_broadcast`=FALSE
         ORDER BY t.`date` DESC
         LIMIT #{num}
+    </select>
 
+    <select id="queryHistoryMessagesByBottomMessageId" resultType="com.myPokeGame.entity.Message">
+        SELECT * FROM message t WHERE t.`is_broadcast`=1 AND t.`id` != #{msgId} AND t.`date` &lt;
+        (SELECT t.`date` FROM message t WHERE t.id=#{msgId}) ORDER BY t.`date` DESC LIMIT 8;
+    </select>
+
+    <select id="queryHistoryPrivateMessagesByMessageIdAndUserIds" parameterType="java.util.Map" resultType="com.myPokeGame.entity.Message">
+        SELECT * FROM message t WHERE t.`is_broadcast`=0
+        AND t.`id` != #{msgId}
+        AND
+        (t.`send_user_id` IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        )
+        AND
+        (t.`receive_user_id` IN
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+        )
+        AND t.`date` &lt;
+        (SELECT t.`date` FROM message t WHERE t.id=#{msgId}) ORDER BY t.`date` DESC LIMIT 8;
     </select>
 </mapper>

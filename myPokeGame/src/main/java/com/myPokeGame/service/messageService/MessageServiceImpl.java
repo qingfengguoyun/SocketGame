@@ -18,9 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -86,6 +84,12 @@ public class MessageServiceImpl implements MessageService {
         return message;
     }
 
+    @Override
+    public List<Message> queryHistroyMessageByMsgId(Long msgId) {
+        List<Message> messages = messageMapper.queryHistoryMessagesByBottomMessageId(msgId);
+        return messages;
+    }
+
 
     @Transactional
     List<Message> queryLatestPrivteMessages(Long connectUserId, Integer num) {
@@ -116,6 +120,18 @@ public class MessageServiceImpl implements MessageService {
         }
         //清除全部发送者为connectUser，接收者为userVo的未读消息记录
         unReadMessageMapper.deleteBySenderIdAndReceiverId(connectUserId,userVo.getUserId());
+        return vos;
+    }
+
+    @Override
+    public List<MessageVo> queryHistoryPrivateMesssgeVosByMsgIdAndUserIds(Long msgId, List<Long> userIds) {
+
+        Map<String,Object> queryMap=new HashMap<>();
+        queryMap.put("msgId",msgId);
+        queryMap.put("userIds",userIds);
+        //mapper层若传参复杂时，需将所有参数封装为Map,其中key为String，value为Object
+        List<Message> messages = messageMapper.queryHistoryPrivateMessagesByMessageIdAndUserIds(queryMap);
+        List<MessageVo> vos = convertUtils.convert(messages, new MessageVo());
         return vos;
     }
 
