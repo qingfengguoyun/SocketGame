@@ -84,4 +84,11 @@ public class UserController {
         });
         return Result.success(resList);
     }
+
+    @ApiOperation(value = "更新用户信息")
+    @PostMapping("/updateUser")
+    public Result updateUser(@RequestBody User user){
+        User updateedUser = userService.updateUser(user);
+        return Result.success(updateedUser);
+    }
 }

@@ -19,4 +19,6 @@ public interface UserService {
     public List<User> queryAllUsers();
 
     public User queryUserById(Long userId);
+
+    public User updateUser(User user);
 }

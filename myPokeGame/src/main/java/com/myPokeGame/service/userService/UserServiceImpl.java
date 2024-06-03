@@ -119,4 +119,13 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectById(userId);
         return user;
     }
+
+    @Override
+    public User updateUser(User user) {
+        int i = userMapper.updateById(user);
+        if(i!=0){
+            return userMapper.selectById(user.getId());
+        }
+        return user;
+    }
 }
