@@ -1,8 +1,10 @@
 package com.myPokeGame.cotroller;
 
+import com.myPokeGame.entity.ProfilePhoto;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.service.messageService.MessageService;
+import com.myPokeGame.service.profilePhotoService.ProfilePhotoService;
 import com.myPokeGame.service.userService.UserService;
 import com.myPokeGame.utils.ConvertUtils;
 import com.myPokeGame.utils.JwtUtils;
@@ -12,6 +14,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +28,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ProfilePhotoService profilePhotoService;
 
     @Autowired
     Map<Long, Date> onlineUserMap;
@@ -88,7 +94,23 @@ public class UserController {
     @ApiOperation(value = "更新用户信息")
     @PostMapping("/updateUser")
     public Result updateUser(@RequestBody User user){
-        User updateedUser = userService.updateUser(user);
-        return Result.success(updateedUser);
+        User updatedUser = userService.updateUser(user);
+        return Result.success(updatedUser);
+    }
+
+    @ApiOperation(value = "上传用户自定义头像")
+    @PostMapping("/uploadUserProfilePhoto")
+    public Result uploadUserProfilePhoto(MultipartFile multipartFile){
+        ProfilePhoto profilePhoto = profilePhotoService.ChangeProfilePhoto(multipartFile);
+        return Result.success(profilePhoto);
+    }
+
+    @ApiOperation(value = "通过Id查询用户个人信息")
+    @PostMapping("/getUserInfoById")
+    public Result getUserInfoById(@RequestBody Long userId){
+        User user = userService.queryUserById(userId);
+        UserVo vo=new UserVo();
+        convertUtils.convert(vo,user);
+        return Result.success(vo);
     }
 }

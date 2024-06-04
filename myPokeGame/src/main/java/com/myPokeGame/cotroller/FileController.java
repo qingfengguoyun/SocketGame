@@ -1,11 +1,12 @@
 package com.myPokeGame.cotroller;
 
 import com.myPokeGame.entity.NativeFile;
+import com.myPokeGame.entity.ProfilePhoto;
 import com.myPokeGame.exceptions.NativeException;
 import com.myPokeGame.mapper.NativeFileMapper;
+import com.myPokeGame.mapper.ProfilePhotoMapper;
 import com.myPokeGame.models.vo.NativeFileVo;
-import com.myPokeGame.service.imageService.NativeFileService;
-import com.myPokeGame.utils.CommonUtils;
+import com.myPokeGame.service.fileService.NativeFileService;
 import com.myPokeGame.utils.NativePage;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
@@ -15,7 +16,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +41,9 @@ public class FileController {
     @Value("${app-env.filePreviewStorage}")
     private String filePreviewStore;
 
+    @Value("${app-env.profilePhotoStorage}")
+    private String profilePhotoStore;
+
     @Value("${app-env.defaultPage}")
     private Integer defaultPage;
 
@@ -52,6 +55,9 @@ public class FileController {
 
     @Autowired
     private NativeFileMapper nativeFileMapper;
+
+    @Autowired
+    private ProfilePhotoMapper profilePhotoMapper;
 
     @Autowired
     HttpServletResponse response;
@@ -119,6 +125,27 @@ public class FileController {
                 }
             }
 
+        } catch (Exception e) {
+            if( e instanceof FileNotFoundException){
+                throw new NativeException("图片未找到");
+            }
+        }
+    }
+
+    @ApiOperation("根据ID获取用户头像")
+    @GetMapping("/getProfilePhoto/{imageId}")
+    public void getProfilePhoto(@PathVariable("imageId") Long imageId){
+        try {
+//            NativeFile nativeFile = nativeFileMapper.selectById(imageId);
+            ProfilePhoto profilePhoto = profilePhotoMapper.selectById(imageId);
+            if(!ObjectUtils.isEmpty(profilePhoto)){
+                BufferedImage image = ImageIO.read(new FileInputStream(profilePhotoStore+ profilePhoto.getProfilePhotoUrl()));
+                response.setContentType("image/"+profilePhoto.getProfilePhotoSuffix());
+                response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+                response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(profilePhoto.getProfilePhotoUrl(),"UTF-8"));
+                ServletOutputStream outputStream = response.getOutputStream();
+                ImageIO.write(image,profilePhoto.getProfilePhotoSuffix(),outputStream);
+            }
         } catch (Exception e) {
             if( e instanceof FileNotFoundException){
                 throw new NativeException("图片未找到");
