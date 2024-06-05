@@ -7,6 +7,7 @@ import com.myPokeGame.mapper.UserMapper;
 import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.utils.CommonUtils;
 import com.myPokeGame.utils.JwtUtils;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,13 +55,23 @@ public class ProfilePhotoServiceImpl implements ProfilePhotoService {
             List<ProfilePhoto> profilePhotos = profilePhotoMapper.queryProfilePhotoByMd5(md5);
             profilePhoto.setDate(new Date());
             if(ObjectUtils.isEmpty(profilePhotos)){
-                String url=CommonUtils.getRandomUuid()+"_"+file.getOriginalFilename();
-                File savedFile=new File(profilePhotoStorage,url);
+                //为未上传的图片
+                String uuid=CommonUtils.getRandomUuid();
+                //头像url
+                String url=uuid+"_"+file.getOriginalFilename();
+                //原图url
+                String orgUrl=uuid+"_origin_"+file.getOriginalFilename();
+                //保存原图
+                File savedFile=new File(profilePhotoStorage,orgUrl);
                 FileOutputStream fileOutputStream = new FileOutputStream(savedFile);
                 fileOutputStream.write(file.getBytes());
                 fileOutputStream.close();
+                //使用Thumbnails压缩图片，生成缩略图作为头像
+                File compressFile=new File(profilePhotoStorage,url);
+                Thumbnails.of(savedFile).size(128,128).toFile(compressFile);
                 profilePhoto.setMd5(md5);
                 profilePhoto.setProfilePhotoUrl(url);
+                profilePhoto.setProfilePhotoOrgUrl(orgUrl);
                 profilePhoto.setProfilePhotoSuffix(CommonUtils.getSuffix(file.getOriginalFilename()));
                 //移除profilePhoto表中userId为当前用户的记录
                 List<ProfilePhoto> records = profilePhotoMapper.queryProfilePhotoByUserId(userVo.getUserId());
@@ -78,6 +89,7 @@ public class ProfilePhotoServiceImpl implements ProfilePhotoService {
             }else{
                 profilePhoto.setProfilePhotoUrl(profilePhotos.get(0).getProfilePhotoUrl());
                 profilePhoto.setProfilePhotoSuffix(profilePhotos.get(0).getProfilePhotoSuffix());
+                profilePhoto.setProfilePhotoOrgUrl(profilePhotos.get(0).getProfilePhotoOrgUrl());
                 profilePhoto.setMd5(md5);
                 //移除profilePhoto表中userId为当前用户的记录
                 List<ProfilePhoto> records = profilePhotoMapper.queryProfilePhotoByUserId(userVo.getUserId());
@@ -88,9 +100,7 @@ public class ProfilePhotoServiceImpl implements ProfilePhotoService {
                 //更新user表记录
                 User user = userMapper.selectById(userVo.getUserId());
                 user.setUserImageId(profilePhoto.getId().toString());
-                if(!ObjectUtils.isEmpty(ids)){
-                    profilePhotoMapper.deleteBatchIds(ids);
-                }
+                userMapper.updateById(user);
             }
             return profilePhoto;
         } catch (IOException e) {

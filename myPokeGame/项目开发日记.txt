@@ -1,0 +1,13 @@
+2024-06-05：
+1，Mybatis Plus ，UpdateById默认不处理值为null的属性，因此无法将值设置为null。
+若想将值更新为null：
+（1）指定属性的@@TableField中添加
+@TableField(updatestrategy=FieldStrategy.IGNORED）(使用后无效，暂未知原因）
+（2）使用update方法，手动拼装UpdateWapper，过程类型书写sql语句。**一定要
+约束update语句生效的范围，否则将导致整张表全部记录被修改！！
+
+2，Thumbnail（缩略图）库常用方法
+Thunbnails.of(<原始文件>).toFile(<目标文件>)
+（1）size（宽，高）：单位为像素，将图片压缩，扩展，直到宽或高达到指定值
+（2）scale（float值）：等比例放大/缩小，过大时会报错
+（3）outputQuality(0-1的float值）：保持图片长宽不变，体积（质量）压缩

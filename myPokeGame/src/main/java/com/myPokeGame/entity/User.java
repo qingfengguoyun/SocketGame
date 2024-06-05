@@ -3,10 +3,7 @@ package com.myPokeGame.entity;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import com.alibaba.fastjson.serializer.ToStringSerializer;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +33,6 @@ public class User extends BaseEntity{
     @TableField(value = "user_image_id")
     String userImageId;
 
-    @TableField(value = "user_default_image")
+    @TableField(updateStrategy = FieldStrategy.IGNORED,value = "user_default_image")
     String userDefaultImage;
 }

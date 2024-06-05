@@ -99,8 +99,8 @@ public class UserController {
     }
 
     @ApiOperation(value = "上传用户自定义头像")
-    @PostMapping("/uploadUserProfilePhoto")
-    public Result uploadUserProfilePhoto(MultipartFile multipartFile){
+    @PostMapping(value="/uploadUserProfilePhoto" ,headers = "content-type=multipart/form-data")
+    public Result uploadUserProfilePhoto(@RequestParam("file") MultipartFile multipartFile){
         ProfilePhoto profilePhoto = profilePhotoService.ChangeProfilePhoto(multipartFile);
         return Result.success(profilePhoto);
     }

@@ -1,5 +1,6 @@
 package com.myPokeGame.service.userService;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.exceptions.NativeException;
 import com.myPokeGame.mapper.UserMapper;
@@ -122,7 +123,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
-        int i = userMapper.updateById(user);
+        UpdateWrapper<User> wapper=new UpdateWrapper<User>();
+        wapper.eq("id",user.getId());
+        wapper.set("user_name",user.getUserName())
+                .set("password",user.getPassword())
+                .set("user_image_id",user.getUserImageId())
+                .set("user_default_image",user.getUserDefaultImage());
+        int i = userMapper.update(user, wapper);
+//        int i = userMapper.updateById(user);
         if(i!=0){
             return userMapper.selectById(user.getId());
         }
