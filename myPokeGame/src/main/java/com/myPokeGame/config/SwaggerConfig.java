@@ -29,7 +29,7 @@ public class SwaggerConfig {
         pars.add(pb.build());
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.myPokeGame.cotroller"))
+                .apis(RequestHandlerSelectors.basePackage("com.myPokeGame.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())

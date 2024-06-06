@@ -1,9 +1,8 @@
-package com.myPokeGame.cotroller;
+package com.myPokeGame.controller;
 
 import com.myPokeGame.entity.ProfilePhoto;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.models.vo.UserVo;
-import com.myPokeGame.service.messageService.MessageService;
 import com.myPokeGame.service.profilePhotoService.ProfilePhotoService;
 import com.myPokeGame.service.userService.UserService;
 import com.myPokeGame.utils.ConvertUtils;

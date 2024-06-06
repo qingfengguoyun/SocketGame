@@ -11,3 +11,12 @@ Thunbnails.of(<原始文件>).toFile(<目标文件>)
 （1）size（宽，高）：单位为像素，将图片压缩，扩展，直到宽或高达到指定值
 （2）scale（float值）：等比例放大/缩小，过大时会报错
 （3）outputQuality(0-1的float值）：保持图片长宽不变，体积（质量）压缩
+
+3，接收前端表单传来的文件:
+（1）@PostMapping中添加  headers = "content-type=multipart/form-data"
+（2）MultipartFile multipartFile 参数前添加 @RequestParam("file")
+（前端表单，传文件的参数需设置为‘file’，只要前后端对参数的命名相同即可）
+
+  eg：  @PostMapping(value="/uploadUserProfilePhoto" ,headers = "content-type=multipart/form-data")
+    public Result uploadUserProfilePhoto(@RequestParam("file") MultipartFile multipartFile){
+    }

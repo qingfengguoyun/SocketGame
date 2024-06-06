@@ -1,4 +1,4 @@
-package com.myPokeGame.cotroller;
+package com.myPokeGame.controller;
 
 import com.myPokeGame.entity.NativeFile;
 import com.myPokeGame.entity.ProfilePhoto;

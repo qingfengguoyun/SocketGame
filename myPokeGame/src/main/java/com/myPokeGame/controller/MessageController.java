@@ -1,4 +1,4 @@
-package com.myPokeGame.cotroller;
+package com.myPokeGame.controller;
 
 import com.myPokeGame.entity.Message;
 import com.myPokeGame.entity.User;
