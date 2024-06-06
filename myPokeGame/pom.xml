@@ -116,11 +116,19 @@
             <version>5.8.14</version>
         </dependency>
 
-<!--        图像处理工具类thumbnailator-->
+<!--    图像处理工具类thumbnailator-->
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>0.4.8</version>
+        </dependency>
+
+<!--    Thumbnails进行图片压缩，出现“No suitable ImageReader found for source data”异常处理-->
+<!--    推测是用来读取webp格式的文件，因为不添加时，ImageIo.read()部分文件（推测为webp类型）返回值为null-->
+        <dependency>
+            <groupId>org.sejda.imageio</groupId>
+            <artifactId>webp-imageio</artifactId>
+            <version>0.1.6</version>
         </dependency>
 
 

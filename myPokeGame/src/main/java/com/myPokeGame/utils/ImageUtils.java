@@ -1,6 +1,7 @@
 package com.myPokeGame.utils;
 
 import cn.hutool.core.io.FileUtil;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.poi.hpsf.Thumbnail;
 
@@ -8,11 +9,14 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+@Slf4j
 public class ImageUtils {
 
     static List<String> imageSuffix=Arrays.asList("jpg","jpeg","png");
@@ -75,8 +79,9 @@ public class ImageUtils {
             if(height>=previewMaxHeight){
                 scale=(previewMaxHeight/image.getHeight());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.info("BufferedImage is null");
+//            e.printStackTrace();
         }
         if("gif".equals(suffix)){
             String outputImageFileName=strs[0]+"_preview."+strs[1];
