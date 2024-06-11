@@ -43,5 +43,5 @@ public class NativeFile extends BaseEntity {
 
     @TableField("md5")
     String md5;
-
+    
 }

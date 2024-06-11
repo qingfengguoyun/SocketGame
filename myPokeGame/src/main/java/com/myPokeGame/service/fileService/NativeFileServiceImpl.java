@@ -1,14 +1,19 @@
 package com.myPokeGame.service.fileService;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.myPokeGame.entity.NativeFile;
+import com.myPokeGame.entity.Tag;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.mapper.NativeFileMapper;
+import com.myPokeGame.mapper.TagMapper;
 import com.myPokeGame.mapper.UserMapper;
 import com.myPokeGame.models.vo.NativeFileVo;
 import com.myPokeGame.models.vo.UserVo;
+import com.myPokeGame.relationEntity.NFileTagRelation;
+import com.myPokeGame.relationMapper.NFileTagRelationMapper;
 import com.myPokeGame.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +42,13 @@ public class NativeFileServiceImpl implements NativeFileService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    TagMapper tagMapper;
+
+
+    @Autowired
+    ConvertUtils convertUtils;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -107,12 +119,14 @@ public class NativeFileServiceImpl implements NativeFileService {
             if(!ObjectUtils.isEmpty(file.getUploaderId())){
                 if(!ObjectUtils.isEmpty(userMap.get(file.getUploaderId()))){
                     User user = userMap.get(file.getUploaderId());
-                    vo = NativeFileVo.convert(file, user);
+                    vo = convertUtils.convert(file,user);
+//                    vo = NativeFileVo.convert(file, user);
 
                 }else{
                     User user = userMapper.selectById(file.getUploaderId());
                     userMap.put(user.getId(),user);
-                    vo = NativeFileVo.convert(file, user);
+                    vo = convertUtils.convert(file,user);
+//                    vo = NativeFileVo.convert(file, user);
                 }
             }else{
                 vo=NativeFileVo.convert(file);
@@ -150,5 +164,8 @@ public class NativeFileServiceImpl implements NativeFileService {
             e.printStackTrace();
         }
     }
+
+
+
 
 }

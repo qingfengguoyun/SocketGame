@@ -2,6 +2,7 @@ package com.myPokeGame.models.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.myPokeGame.entity.NativeFile;
+import com.myPokeGame.entity.Tag;
 import com.myPokeGame.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +31,9 @@ public class NativeFileVo {
     String filePreviewUrl;
 
     String fileType;
+
+    //文件对应的标签
+    List<Tag> tags;
 
     Date date;
 

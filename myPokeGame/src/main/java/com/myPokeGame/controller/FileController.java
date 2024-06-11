@@ -2,11 +2,14 @@ package com.myPokeGame.controller;
 
 import com.myPokeGame.entity.NativeFile;
 import com.myPokeGame.entity.ProfilePhoto;
+import com.myPokeGame.entity.Tag;
 import com.myPokeGame.exceptions.NativeException;
 import com.myPokeGame.mapper.NativeFileMapper;
 import com.myPokeGame.mapper.ProfilePhotoMapper;
+import com.myPokeGame.models.pojo.NFileTagsPojo;
 import com.myPokeGame.models.vo.NativeFileVo;
 import com.myPokeGame.service.fileService.NativeFileService;
+import com.myPokeGame.service.tagService.TagService;
 import com.myPokeGame.utils.NativePage;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
@@ -58,6 +61,9 @@ public class FileController {
 
     @Autowired
     private ProfilePhotoMapper profilePhotoMapper;
+
+    @Autowired
+    private TagService tagService;
 
     @Autowired
     HttpServletResponse response;
@@ -180,6 +186,13 @@ public class FileController {
     @GetMapping("/downloadFile")
     public void downloadFileById(Long fileId,HttpServletResponse response){
         nativeFileService.downLoadFile(fileId,response);
+    }
+
+    @ApiOperation("更新文件标签")
+    @PostMapping("/updateFileTags")
+    public Result updateFileTags(@RequestBody NFileTagsPojo pojo){
+        List<Long> tagIds = tagService.updateTagsByFileId(pojo.getFileId(), pojo.getTagIds());
+        return Result.success(tagIds);
     }
 
 }
