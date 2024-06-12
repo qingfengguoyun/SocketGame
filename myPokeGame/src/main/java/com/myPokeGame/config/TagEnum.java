@@ -8,6 +8,11 @@ import java.util.List;
 public enum TagEnum {
 
     CARTOON("动漫",true),
+    PICTURE("图片",true),
+    ORIGIN_QUALITY("原画",true),
+    MID_QUALITY("中质量",true),
+    PROFILE_PHOTO("头像",true),
+    HIGH_QUALITY("高质量",true),
     SCENERY("风景",true),
     FILE("文件",true),
     TRAVEL("旅行",true);

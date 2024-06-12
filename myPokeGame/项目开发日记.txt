@@ -20,3 +20,14 @@ Thunbnails.of(<原始文件>).toFile(<目标文件>)
   eg：  @PostMapping(value="/uploadUserProfilePhoto" ,headers = "content-type=multipart/form-data")
     public Result uploadUserProfilePhoto(@RequestParam("file") MultipartFile multipartFile){
     }
+
+2024-06-12：
+1，mysql数据库中，主键id（或其他以long型长数字为内容）的列类型需设置为bigint(20)，而非varchar。
+varchar将导致数据库连接工具的selectById等方法查询结果报错（查询出多个）
+原因：mybatis plus等连接库自动拼接sql语句时不会添加引号，查询字符串时若不添加引号，18位后的字符将缺失
+（似乎会将入参和对应列都转化为string，且仅比较至17位）
+
+**数据库-后端-前端的id类型 最好实现：bigint(20)-Long-String（后端配置fastjson将Long转为string）
+
+2，mybatis手写xml文件时，若返回List<Long>(例如查询多个id），xml中resultType需标记为”string“而非”long“
+long会导致返回值对后三位进行四舍五入

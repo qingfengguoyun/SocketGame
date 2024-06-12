@@ -10,6 +10,7 @@ import com.myPokeGame.entity.User;
 import com.myPokeGame.mapper.NativeFileMapper;
 import com.myPokeGame.mapper.TagMapper;
 import com.myPokeGame.mapper.UserMapper;
+import com.myPokeGame.models.pojo.NativeFileQueryPojo;
 import com.myPokeGame.models.vo.NativeFileVo;
 import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.relationEntity.NFileTagRelation;
@@ -108,8 +109,9 @@ public class NativeFileServiceImpl implements NativeFileService {
     }
 
     @Override
-    public NativePage<NativeFileVo> queryFilesByPage(Integer currentPage,Integer pageSize){
+    public NativePage<NativeFileVo> queryFilesByPage(Integer currentPage, Integer pageSize, NativeFileQueryPojo pojo){
         IPage<NativeFile> page=new Page<>(currentPage,pageSize);
+        //TODO: 添加条件查询文件的方法
         nativeFileMapper.queryAll(page);
         List<NativeFile> records = page.getRecords();
         List<NativeFileVo> resList=new LinkedList<>();

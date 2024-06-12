@@ -7,8 +7,10 @@ import com.myPokeGame.exceptions.NativeException;
 import com.myPokeGame.mapper.NativeFileMapper;
 import com.myPokeGame.mapper.ProfilePhotoMapper;
 import com.myPokeGame.models.pojo.NFileTagsPojo;
+import com.myPokeGame.models.pojo.NativeFileQueryPojo;
 import com.myPokeGame.models.vo.NativeFileVo;
 import com.myPokeGame.service.fileService.NativeFileService;
+import com.myPokeGame.service.nFileTagRelationService.NFileTagRelationService;
 import com.myPokeGame.service.tagService.TagService;
 import com.myPokeGame.utils.NativePage;
 import com.myPokeGame.utils.Result;
@@ -64,6 +66,9 @@ public class FileController {
 
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private NFileTagRelationService nFileTagRelationService;
 
     @Autowired
     HttpServletResponse response;
@@ -167,18 +172,20 @@ public class FileController {
     @ApiOperation("分页获取文件")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "currentPage", value = "当前页码", dataType = "Integer", paramType = "path", defaultValue = "1",required = false),
-            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "Integer", paramType = "path", defaultValue = "5",required = false)
+            @ApiImplicitParam(name = "pageSize", value = "每页大小", dataType = "Integer", paramType = "path", defaultValue = "5",required = false),
+            @ApiImplicitParam(name = "pojo", value = "条件参数", dataType = "NativeFileQueryPojo", required = false)
     })
-    @GetMapping({"/getFilesByPage/{currentPage}/{pageSize}","/getFilesByPage/{currentPage}","/getFilesByPage"})
+    @PostMapping({"/getFilesByPage/{currentPage}/{pageSize}","/getFilesByPage/{currentPage}","/getFilesByPage"})
     public Result getFilesByPage(@PathVariable(required = false) Integer currentPage,
-                               @PathVariable(required = false) Integer pageSize){
+                               @PathVariable(required = false) Integer pageSize,
+                                 @RequestBody(required = false) NativeFileQueryPojo pojo ){
         if(ObjectUtils.isEmpty(currentPage)){
             currentPage=defaultPage;
         }
         if(ObjectUtils.isEmpty(pageSize)){
             pageSize=defaultPageSize;
         }
-        NativePage<NativeFileVo> nativePage = nativeFileService.queryFilesByPage(currentPage, pageSize);
+        NativePage<NativeFileVo> nativePage = nativeFileService.queryFilesByPage(currentPage, pageSize,pojo);
         return Result.success(nativePage);
     }
 
@@ -193,6 +200,14 @@ public class FileController {
     public Result updateFileTags(@RequestBody NFileTagsPojo pojo){
         List<Long> tagIds = tagService.updateTagsByFileId(pojo.getFileId(), pojo.getTagIds());
         return Result.success(tagIds);
+    }
+
+    @ApiOperation("根据标签数组查询文件id")
+    @PostMapping("/queryFileIdsByTagIds")
+    public Result queryFileIdsByTagIds(@RequestBody List<Long>tagIds){
+        log.info("根据tagIds查询fileIds");
+        List<Long> fileIds = nFileTagRelationService.queryFileIdsByTagIds(tagIds);
+        return Result.success(fileIds);
     }
 
 }

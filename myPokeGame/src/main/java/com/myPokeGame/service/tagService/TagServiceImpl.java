@@ -44,7 +44,7 @@ public class TagServiceImpl implements TagService {
         List<Tag> newTagNames = tags.stream().filter(t -> {
             return !existTagNames.contains(t.getTagName());
         }).collect(Collectors.toList());
-        if(ObjectUtils.isEmpty(newTagNames)){
+        if(!ObjectUtils.isEmpty(newTagNames)){
             log.info("初始化/更新标签表");
             newTagNames.stream().forEach(t->{
                 tagMapper.insert(t);
@@ -75,6 +75,7 @@ public class TagServiceImpl implements TagService {
         Set<Long> tagIds = nFileTagRelations.stream().map(t -> {
             return t.getTagId();
         }).collect(Collectors.toSet());
+        List<String> tagIdStrs = tagIds.stream().map(t -> t.toString()).collect(Collectors.toList());
         List<Tag> tags = new LinkedList<>();
         if(!ObjectUtils.isEmpty(tagIds)){
             tags=tagMapper.selectBatchIds(tagIds);

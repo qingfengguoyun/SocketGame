@@ -4,16 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.myPokeGame.relationMapper.NFileTagRelationMapper">
 
-    <select id="queryFileIdsByTagIds" parameterType="java.util.Map" resultType="long">
-        SELECT t.`fileId`
+    <select id="queryFileIdsByTagIds" parameterType="java.util.Map" resultType="string">
+        SELECT t.`native_file_id`
         FROM t_nfile_tag_relation t
-        WHERE t.`tagId` IN
+        WHERE t.`tag_id` IN
         <foreach collection="tagIds" item="tagId" open="(" separator="," close=")">
             #{tagId}
         </foreach>
-        ("a", "b", "c")
-        GROUP BY t.`fileId`
-        HAVING COUNT(DISTINCT t.`tagId`) = #{count};
+        GROUP BY t.`native_file_id`
+        HAVING COUNT(DISTINCT t.`tag_id`) = #{count};
     </select>
 
 </mapper>
