@@ -7,9 +7,10 @@
 约束update语句生效的范围，否则将导致整张表全部记录被修改！！
 
 2，Thumbnail（缩略图）库常用方法
-Thunbnails.of(<原始文件>).toFile(<目标文件>)
-（1）size（宽，高）：单位为像素，将图片压缩，扩展，直到宽或高达到指定值
-（2）scale（float值）：等比例放大/缩小，过大时会报错
+Thunbnails.of(<原始文件>).<调节方法1>.<调节方法2>... .toFile(<目标文件>)
+常用调节方法：
+（1）size（宽，高）：单位为像素，将图片压缩，扩展，直到宽或高达到指定值（保持比例不变，也有强行破坏比例的参数）
+（2）scale（float值）：等比例放大/缩小，0-1为缩小，1以上为放大，过大时会报错
 （3）outputQuality(0-1的float值）：保持图片长宽不变，体积（质量）压缩
 
 3，接收前端表单传来的文件:
@@ -24,10 +25,10 @@ Thunbnails.of(<原始文件>).toFile(<目标文件>)
 2024-06-12：
 1，mysql数据库中，主键id（或其他以long型长数字为内容）的列类型需设置为bigint(20)，而非varchar。
 varchar将导致数据库连接工具的selectById等方法查询结果报错（查询出多个）
-原因：mybatis plus等连接库自动拼接sql语句时不会添加引号，查询字符串时若不添加引号，18位后的字符将缺失
+原因：mybatis plus等数据库连接工具自动拼接sql语句时不会添加引号。若查询字符串时参数不添加引号，18位后的字符将缺失
 （似乎会将入参和对应列都转化为string，且仅比较至17位）
 
-**数据库-后端-前端的id类型 最好实现：bigint(20)-Long-String（后端配置fastjson将Long转为string）
+**数据库-后端-前端（ts）的id数据类型 最好实现：bigint(20)-Long-String（后端配置fastjson将Long转为string）
 
-2，mybatis手写xml文件时，若返回List<Long>(例如查询多个id），xml中resultType需标记为”string“而非”long“
+2，mybatis手写xml文件中sql语句时，若返回List<Long>(例如查询多个id），xml中resultType需标记为”string“而非”long“
 long会导致返回值对后三位进行四舍五入
