@@ -112,7 +112,16 @@ public class NativeFileServiceImpl implements NativeFileService {
     public NativePage<NativeFileVo> queryFilesByPage(Integer currentPage, Integer pageSize, NativeFileQueryPojo pojo){
         IPage<NativeFile> page=new Page<>(currentPage,pageSize);
         //TODO: 添加条件查询文件的方法
-        nativeFileMapper.queryAll(page);
+        Map<String,Object> param=new HashMap<>();
+        if (!ObjectUtils.isEmpty(pojo)){
+            param.put("tagIds",ObjectUtils.isEmpty(pojo.getTagIds())?new LinkedList<Long>():pojo.getTagIds());
+            param.put("fileName",ObjectUtils.isEmpty(pojo.getFileName())?"":pojo.getFileName());
+            if(!ObjectUtils.isEmpty(pojo.getTagIds())){
+                param.put("count",pojo.getTagIds().size());
+            }
+        }
+        nativeFileMapper.queryAllByConditions(param,page);
+//        nativeFileMapper.queryAll(page);
         List<NativeFile> records = page.getRecords();
         List<NativeFileVo> resList=new LinkedList<>();
         Map<Long, User> userMap=new HashMap<>();

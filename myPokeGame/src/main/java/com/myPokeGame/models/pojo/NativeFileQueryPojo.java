@@ -16,4 +16,7 @@ public class NativeFileQueryPojo {
 
     List<Long> tagIds;
 
+    // 模糊匹配的文件名
+    String fileName;
+
 }

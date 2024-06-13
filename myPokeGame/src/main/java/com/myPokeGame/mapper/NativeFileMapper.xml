@@ -12,4 +12,23 @@
         SELECT * FROM t_nativefile t
     </select>
 
+    <select id="queryAllByConditions" parameterType="map" resultType="com.myPokeGame.entity.NativeFile">
+        SELECT * FROM t_nativefile tn WHERE 1=1
+        <!--对tag进行筛选-->
+        <if test="params.tagIds !=null and params.tagIds.size() > 0 ">
+            and
+            tn.`id` IN
+            (
+            SELECT t.`native_file_id`
+            FROM t_nfile_tag_relation t
+            WHERE t.`tag_id` IN
+            <foreach collection="params.tagIds" item="tagId" open="(" separator="," close=")">
+                #{tagId}
+            </foreach>
+            GROUP BY t.`native_file_id`
+            HAVING COUNT(DISTINCT t.`tag_id`) = #{params.count}
+            )
+        </if>
+    </select>
+
 </mapper>

@@ -6,6 +6,7 @@ import com.myPokeGame.config.TagEnum;
 import com.myPokeGame.entity.Tag;
 import com.myPokeGame.mapper.NativeFileMapper;
 import com.myPokeGame.mapper.TagMapper;
+import com.myPokeGame.models.pojo.TagQueryPojo;
 import com.myPokeGame.relationEntity.NFileTagRelation;
 import com.myPokeGame.relationMapper.NFileTagRelationMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -101,5 +102,21 @@ public class TagServiceImpl implements TagService {
         });
 
         return tagIds.stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Tag> queryTagsByConditions(TagQueryPojo pojo) {
+        LambdaQueryWrapper<Tag> wrapper=new LambdaQueryWrapper<>();
+        if(ObjectUtils.isEmpty(pojo)){
+            wrapper.eq(Tag::getIsBasic,true);
+            wrapper.like(Tag::getTagName,"");
+        }else{
+            if(pojo.getIsBasic()==true){
+                wrapper.eq(Tag::getIsBasic,true);
+            }
+            wrapper.like(Tag::getTagName,ObjectUtils.isEmpty(pojo.getTagName())?"":pojo.getTagName());
+        }
+        List<Tag> res = tagMapper.selectList(wrapper);
+        return res;
     }
 }
