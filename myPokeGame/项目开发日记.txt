@@ -32,3 +32,33 @@ varchar将导致数据库连接工具的selectById等方法查询结果报错（
 
 2，mybatis手写xml文件中sql语句时，若返回List<Long>(例如查询多个id），xml中resultType需标记为”string“而非”long“
 long会导致返回值对后三位进行四舍五入
+
+
+2024-06-13：
+mybatis-plus， xml中手写sql时，传入参数为map类型时，若仅有一个map时可以不使用别名。但如果
+存在多个参数，例如IPage和Map时，需给map对象使用@Param("别名")取别名，并在sql语句中使用
+#{别名.属性}获取属性。否则产生：
+BindingException: Parameter ‘name‘ not found. Available parameters are [param, page, param1, param2]
+报错
+
+正确使用：例
+interface：public IPage<NativeFile> queryAllByConditions(@Param("params") Map<String,Object> param, IPage<NativeFile> page);
+xml：
+<select id="queryAllByConditions" parameterType="map" resultType="com.myPokeGame.entity.NativeFile">
+        SELECT * FROM t_nativefile tn WHERE 1=1
+        <!--对tag进行筛选-->
+        <if test="params.tagIds !=null and params.tagIds.size() > 0 ">
+            and
+            tn.`id` IN
+            (
+            SELECT t.`native_file_id`
+            FROM t_nfile_tag_relation t
+            WHERE t.`tag_id` IN
+            <foreach collection="params.tagIds" item="tagId" open="(" separator="," close=")">
+                #{tagId}
+            </foreach>
+            GROUP BY t.`native_file_id`
+            HAVING COUNT(DISTINCT t.`tag_id`) = #{params.count}
+            )
+        </if>
+    </select>
