@@ -29,6 +29,9 @@
             HAVING COUNT(DISTINCT t.`tag_id`) = #{params.count}
             )
         </if>
+        <if test="params.fileName != null and params.fileName != ''">
+            and tn.`file_name` like CONCAT('%',#{params.fileName},'%')
+        </if>
     </select>
 
 </mapper>
