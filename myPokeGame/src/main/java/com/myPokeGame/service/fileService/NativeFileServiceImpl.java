@@ -159,7 +159,8 @@ public class NativeFileServiceImpl implements NativeFileService {
         try {
             //响应首部 Access-Control-Expose-Headers 为控制暴露的开关，列出哪些首部可以作为响应的一部分暴露给外部
             response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
-            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName(),"UTF-8"));
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName()+
+                    (ObjectUtils.isEmpty(file.getFileSuffix())?"":"."+file.getFileSuffix()),"UTF-8"));
             InputStream inputStream = new FileInputStream(resourceFile);
             ServletOutputStream outputStream = response.getOutputStream();
             byte[] buffer=new byte[1024];

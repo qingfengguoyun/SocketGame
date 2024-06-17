@@ -40,9 +40,19 @@ public class CommonUtils {
         return IdUtil.randomUUID();
     }
 
+    /**
+     * 获取文件尾缀
+     * @param str
+     * @return
+     */
     public static String getSuffix(String str){
         int index = str.lastIndexOf(".");
         return index==-1?"":str.substring(index+1);
+    }
+
+    public static String getFileNameWithoutSuffix(String str){
+        int index = str.lastIndexOf(".");
+        return index==-1?str:str.substring(0,index);
     }
 
     public static String getContentType(String fileSuffix){
