@@ -15,7 +15,7 @@ spring:
       &useUnicode=true\
       &characterEncoding=UTF-8"
     username: root
-    password: xxzzing
+    password: mysql
   resources:
     static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:${app-env.fileStorage}
 
