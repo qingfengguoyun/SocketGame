@@ -26,9 +26,64 @@ Thunbnails.of(<原始文件>).<调节方法1>.<调节方法2>... .toFile(<目标
 1，mysql数据库中，主键id（或其他以long型长数字为内容）的列类型需设置为bigint(20)，而非varchar。
 varchar将导致数据库连接工具的selectById等方法查询结果报错（查询出多个）
 原因：mybatis plus等数据库连接工具自动拼接sql语句时不会添加引号。若查询字符串时参数不添加引号，18位后的字符将缺失
-（似乎会将入参和对应列都转化为string，且仅比较至17位）
+（似乎会将入参和对应列都转化为Long，且仅比较至17位）
 
 **数据库-后端-前端（ts）的id数据类型 最好实现：bigint(20)-Long-String（后端配置fastjson将Long转为string）
 
 2，mybatis手写xml文件中sql语句时，若返回List<Long>(例如查询多个id），xml中resultType需标记为”string“而非”long“
-long会导致返回值对后三位进行四舍五入
+long会导致返回值对后三位进行四舍五入（或者直接不屑resultType）
+
+
+2024-06-13：
+mybatis-plus， xml中手写sql时，传入参数为map类型时，若仅有一个map时可以不使用别名。但如果
+存在多个参数，例如IPage和Map时，需给map对象使用@Param("别名")取别名，并在sql语句中使用
+#{别名.属性}获取属性。否则产生：
+BindingException: Parameter ‘name‘ not found. Available parameters are [param, page, param1, param2]
+报错
+
+正确使用：例
+interface：public IPage<NativeFile> queryAllByConditions(@Param("params") Map<String,Object> param, IPage<NativeFile> page);
+xml：
+<select id="queryAllByConditions" parameterType="map" resultType="com.myPokeGame.entity.NativeFile">
+        SELECT * FROM t_nativefile tn WHERE 1=1
+        <!--对tag进行筛选-->
+        <if test="params.tagIds !=null and params.tagIds.size() > 0 ">
+            and
+            tn.`id` IN
+            (
+            SELECT t.`native_file_id`
+            FROM t_nfile_tag_relation t
+            WHERE t.`tag_id` IN
+            <foreach collection="params.tagIds" item="tagId" open="(" separator="," close=")">
+                #{tagId}
+            </foreach>
+            GROUP BY t.`native_file_id`
+            HAVING COUNT(DISTINCT t.`tag_id`) = #{params.count}
+            )
+        </if>
+    </select>
+
+
+2024-06-19：
+
+1，LNMP环境一键安
+LNMP：Linux+Nginx+Mysql+PHP，一键安装常用的项目部署环境
+详细步骤：https://blog.csdn.net/weixin_42045639/article/details/128291145
+**注意安装LNMP1.9，不要安装1.0
+
+2，mysql修改root用户权限，使外网ip可连接数据库
+
+mysql用户权限配置位于'mysql'库的'user'表中
+select u.Host,u.User from `user` where u.User='root'可查询root角色的可访问ip
+通常为
+Host		User
+localhost		root
+
+此时执行：update user set Host='%' where User = 'root'
+修改user表为：
+Host		User
+%		root
+
+最后执行：flush privilege;更新权限即可
+
+**注意防火墙需开启，且开放指定端口（3306）

@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.myPokeGame.entity.NativeFile;
+import com.myPokeGame.entity.NativeFileSource;
 import com.myPokeGame.entity.Tag;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.mapper.NativeFileMapper;
+import com.myPokeGame.mapper.NativeFileSourceMapper;
 import com.myPokeGame.mapper.TagMapper;
 import com.myPokeGame.mapper.UserMapper;
 import com.myPokeGame.models.pojo.NativeFileQueryPojo;
@@ -42,6 +44,12 @@ public class NativeFileServiceImpl implements NativeFileService {
     NativeFileMapper nativeFileMapper;
 
     @Autowired
+    NativeFileSourceService nativeFileSourceService;
+
+    @Autowired
+    NativeFileSourceMapper nativeFileSourceMapper;
+
+    @Autowired
     UserMapper userMapper;
 
     @Autowired
@@ -73,30 +81,39 @@ public class NativeFileServiceImpl implements NativeFileService {
             nativeFileInfo.setUploaderId(userVo.getUserId());
             //验证MD5是否重复，若重复则不执行保存，仅添加数据库记录
             String md5 = CommonUtils.calcMd5(file.getInputStream());
+            List<NativeFileSource> nativeFileSources = nativeFileSourceService.queryByMd5(md5);
             List<NativeFile> nativeFiles = nativeFileMapper.queryByMd5(md5);
             nativeFileInfo.setDate(new Date());
-            if(ObjectUtils.isEmpty(nativeFiles)){
+            if(ObjectUtils.isEmpty(nativeFileSources)){
                 nativeFileInfo.setFileName(file.getOriginalFilename());
                 String url=CommonUtils.getRandomUuid()+"_"+file.getOriginalFilename();
                 File savedFile=new File(fileStore,url);
                 FileOutputStream fileOutputStream = new FileOutputStream(savedFile);
                 fileOutputStream.write(file.getBytes());
                 fileOutputStream.close();
+
+                //生成NativeFileSource记录
+                NativeFileSource source=new NativeFileSource();
+                source.setMd5(md5);
+                source.setFileUrl(url);
                 //如果是图片则生成预览图
                 if(ImageUtils.isImage(url)){
                     String previewImageUrl = ImageUtils.getCompressImage(savedFile,filePreviewStore);
 //                            ImageUtils.getPreviewImage(savedFile, filePreviewStore, 198);
                     log.info("previewImageUrl:"+previewImageUrl);
                     nativeFileInfo.setFilePreviewUrl(previewImageUrl);
+                    source.setFilePreviewUrl(previewImageUrl);
                 }
+                //在t_native_file_source表中添加记录
+                nativeFileSourceMapper.insert(source);
                 nativeFileInfo.setMd5(md5);
                 nativeFileInfo.setFileUrl(url);
                 nativeFileInfo.setFileSuffix(CommonUtils.getSuffix(file.getOriginalFilename()));
                 saveFile(nativeFileInfo);
             }else{
                 nativeFileInfo.setFileName(file.getOriginalFilename());
-                nativeFileInfo.setFileUrl(nativeFiles.get(0).getFileUrl());
-                nativeFileInfo.setFilePreviewUrl(nativeFiles.get(0).getFilePreviewUrl());
+                nativeFileInfo.setFileUrl(nativeFileSources.get(0).getFileUrl());
+                nativeFileInfo.setFilePreviewUrl(nativeFileSources.get(0).getFilePreviewUrl());
                 nativeFileInfo.setMd5(md5);
                 nativeFileInfo.setFileSuffix(CommonUtils.getSuffix(file.getOriginalFilename()));
                 saveFile(nativeFileInfo);
@@ -112,7 +129,16 @@ public class NativeFileServiceImpl implements NativeFileService {
     public NativePage<NativeFileVo> queryFilesByPage(Integer currentPage, Integer pageSize, NativeFileQueryPojo pojo){
         IPage<NativeFile> page=new Page<>(currentPage,pageSize);
         //TODO: 添加条件查询文件的方法
-        nativeFileMapper.queryAll(page);
+        Map<String,Object> param=new HashMap<>();
+        if (!ObjectUtils.isEmpty(pojo)){
+            param.put("tagIds",ObjectUtils.isEmpty(pojo.getTagIds())?new LinkedList<Long>():pojo.getTagIds());
+            param.put("fileName",ObjectUtils.isEmpty(pojo.getFileName())?"":pojo.getFileName());
+            if(!ObjectUtils.isEmpty(pojo.getTagIds())){
+                param.put("count",pojo.getTagIds().size());
+            }
+        }
+        nativeFileMapper.queryAllByConditions(param,page);
+//        nativeFileMapper.queryAll(page);
         List<NativeFile> records = page.getRecords();
         List<NativeFileVo> resList=new LinkedList<>();
         Map<Long, User> userMap=new HashMap<>();
@@ -150,7 +176,8 @@ public class NativeFileServiceImpl implements NativeFileService {
         try {
             //响应首部 Access-Control-Expose-Headers 为控制暴露的开关，列出哪些首部可以作为响应的一部分暴露给外部
             response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
-            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName(),"UTF-8"));
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getFileName()+
+                    (ObjectUtils.isEmpty(file.getFileSuffix())?"":"."+file.getFileSuffix()),"UTF-8"));
             InputStream inputStream = new FileInputStream(resourceFile);
             ServletOutputStream outputStream = response.getOutputStream();
             byte[] buffer=new byte[1024];

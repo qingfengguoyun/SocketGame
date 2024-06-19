@@ -202,6 +202,15 @@ public class FileController {
         return Result.success(tagIds);
     }
 
+    @ApiOperation("批量更新文件标签")
+    @PostMapping("/updateFileTagsByBatch")
+    public Result updateFileTagsByBatch(@RequestBody NFileTagsPojo pojo){
+        for (Long fileId : pojo.getFileIds()){
+            List<Long> tagIds = tagService.updateTagsByFileId(fileId, pojo.getTagIds());
+        }
+        return Result.success(pojo.getTagIds());
+    }
+
     @ApiOperation("根据标签数组查询文件id")
     @PostMapping("/queryFileIdsByTagIds")
     public Result queryFileIdsByTagIds(@RequestBody List<Long>tagIds){

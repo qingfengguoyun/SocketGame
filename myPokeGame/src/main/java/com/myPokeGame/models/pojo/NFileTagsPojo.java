@@ -13,5 +13,7 @@ public class NFileTagsPojo {
 
     Long fileId;
 
+    List<Long> fileIds;
+
     List<Long> tagIds;
 }
