@@ -7,23 +7,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @SuperBuilder
-@TableName(value = "t_tag")
-public class Tag extends BaseEntity {
+@TableName("t_nativefile_source")
+public class NativeFileSource extends BaseEntity{
 
-    @TableField(value = "tag_name")
-    String tagName;
+    @TableField("md5")
+    String md5;
 
-    @TableField(value = "is_basic")
-    Boolean isBasic=true;
+    @TableField("file_url")
+    String fileUrl;
 
-    /**
-     * 是否为限制标签
-     */
-    @TableField(value = "is_limited")
-    Boolean isLimited=false;
-
+    @TableField("file_preview_url")
+    String filePreviewUrl;
 }

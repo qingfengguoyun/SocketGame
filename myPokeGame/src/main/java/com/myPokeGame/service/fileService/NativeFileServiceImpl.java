@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.myPokeGame.entity.NativeFile;
+import com.myPokeGame.entity.NativeFileSource;
 import com.myPokeGame.entity.Tag;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.mapper.NativeFileMapper;
+import com.myPokeGame.mapper.NativeFileSourceMapper;
 import com.myPokeGame.mapper.TagMapper;
 import com.myPokeGame.mapper.UserMapper;
 import com.myPokeGame.models.pojo.NativeFileQueryPojo;
@@ -42,6 +44,12 @@ public class NativeFileServiceImpl implements NativeFileService {
     NativeFileMapper nativeFileMapper;
 
     @Autowired
+    NativeFileSourceService nativeFileSourceService;
+
+    @Autowired
+    NativeFileSourceMapper nativeFileSourceMapper;
+
+    @Autowired
     UserMapper userMapper;
 
     @Autowired
@@ -73,30 +81,39 @@ public class NativeFileServiceImpl implements NativeFileService {
             nativeFileInfo.setUploaderId(userVo.getUserId());
             //验证MD5是否重复，若重复则不执行保存，仅添加数据库记录
             String md5 = CommonUtils.calcMd5(file.getInputStream());
+            List<NativeFileSource> nativeFileSources = nativeFileSourceService.queryByMd5(md5);
             List<NativeFile> nativeFiles = nativeFileMapper.queryByMd5(md5);
             nativeFileInfo.setDate(new Date());
-            if(ObjectUtils.isEmpty(nativeFiles)){
+            if(ObjectUtils.isEmpty(nativeFileSources)){
                 nativeFileInfo.setFileName(file.getOriginalFilename());
                 String url=CommonUtils.getRandomUuid()+"_"+file.getOriginalFilename();
                 File savedFile=new File(fileStore,url);
                 FileOutputStream fileOutputStream = new FileOutputStream(savedFile);
                 fileOutputStream.write(file.getBytes());
                 fileOutputStream.close();
+
+                //生成NativeFileSource记录
+                NativeFileSource source=new NativeFileSource();
+                source.setMd5(md5);
+                source.setFileUrl(url);
                 //如果是图片则生成预览图
                 if(ImageUtils.isImage(url)){
                     String previewImageUrl = ImageUtils.getCompressImage(savedFile,filePreviewStore);
 //                            ImageUtils.getPreviewImage(savedFile, filePreviewStore, 198);
                     log.info("previewImageUrl:"+previewImageUrl);
                     nativeFileInfo.setFilePreviewUrl(previewImageUrl);
+                    source.setFilePreviewUrl(previewImageUrl);
                 }
+                //在t_native_file_source表中添加记录
+                nativeFileSourceMapper.insert(source);
                 nativeFileInfo.setMd5(md5);
                 nativeFileInfo.setFileUrl(url);
                 nativeFileInfo.setFileSuffix(CommonUtils.getSuffix(file.getOriginalFilename()));
                 saveFile(nativeFileInfo);
             }else{
                 nativeFileInfo.setFileName(file.getOriginalFilename());
-                nativeFileInfo.setFileUrl(nativeFiles.get(0).getFileUrl());
-                nativeFileInfo.setFilePreviewUrl(nativeFiles.get(0).getFilePreviewUrl());
+                nativeFileInfo.setFileUrl(nativeFileSources.get(0).getFileUrl());
+                nativeFileInfo.setFilePreviewUrl(nativeFileSources.get(0).getFilePreviewUrl());
                 nativeFileInfo.setMd5(md5);
                 nativeFileInfo.setFileSuffix(CommonUtils.getSuffix(file.getOriginalFilename()));
                 saveFile(nativeFileInfo);
