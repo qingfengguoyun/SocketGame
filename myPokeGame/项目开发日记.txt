@@ -11,7 +11,7 @@ Thunbnails.of(<原始文件>).<调节方法1>.<调节方法2>... .toFile(<目标
 常用调节方法：
 （1）size（宽，高）：单位为像素，将图片压缩，扩展，直到宽或高达到指定值（保持比例不变，也有强行破坏比例的参数）
 （2）scale（float值）：等比例放大/缩小，0-1为缩小，1以上为放大，过大时会报错
-（3）outputQuality(0-1的float值）：保持图片长宽不变，体积（质量）压缩
+（3）outputQuality(0-1的float值）：保持图片长宽值不变，仅对体积（质量）压缩
 
 3，接收前端表单传来的文件:
 （1）@PostMapping中添加  headers = "content-type=multipart/form-data"
