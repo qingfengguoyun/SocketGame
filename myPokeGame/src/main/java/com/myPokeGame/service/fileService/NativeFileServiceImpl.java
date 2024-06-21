@@ -85,7 +85,8 @@ public class NativeFileServiceImpl implements NativeFileService {
             List<NativeFile> nativeFiles = nativeFileMapper.queryByMd5(md5);
             nativeFileInfo.setDate(new Date());
             if(ObjectUtils.isEmpty(nativeFileSources)){
-                nativeFileInfo.setFileName(file.getOriginalFilename());
+
+                nativeFileInfo.setFileName(CommonUtils.getFileNameWithoutSuffix(file.getOriginalFilename()));
                 String url=CommonUtils.getRandomUuid()+"_"+file.getOriginalFilename();
                 File savedFile=new File(fileStore,url);
                 FileOutputStream fileOutputStream = new FileOutputStream(savedFile);
@@ -111,7 +112,7 @@ public class NativeFileServiceImpl implements NativeFileService {
                 nativeFileInfo.setFileSuffix(CommonUtils.getSuffix(file.getOriginalFilename()));
                 saveFile(nativeFileInfo);
             }else{
-                nativeFileInfo.setFileName(file.getOriginalFilename());
+                nativeFileInfo.setFileName(CommonUtils.getFileNameWithoutSuffix(file.getOriginalFilename()));
                 nativeFileInfo.setFileUrl(nativeFileSources.get(0).getFileUrl());
                 nativeFileInfo.setFilePreviewUrl(nativeFileSources.get(0).getFilePreviewUrl());
                 nativeFileInfo.setMd5(md5);
