@@ -9,9 +9,13 @@ import com.myPokeGame.mapper.ProfilePhotoMapper;
 import com.myPokeGame.models.pojo.NFileTagsPojo;
 import com.myPokeGame.models.pojo.NativeFileQueryPojo;
 import com.myPokeGame.models.vo.NativeFileVo;
+import com.myPokeGame.models.vo.UserVo;
 import com.myPokeGame.service.fileService.NativeFileService;
 import com.myPokeGame.service.nFileTagRelationService.NFileTagRelationService;
+import com.myPokeGame.service.socketIoService.SocketIoEvents;
+import com.myPokeGame.service.socketIoService.SocketIoService;
 import com.myPokeGame.service.tagService.TagService;
+import com.myPokeGame.utils.JwtUtils;
 import com.myPokeGame.utils.NativePage;
 import com.myPokeGame.utils.Result;
 import io.swagger.annotations.Api;
@@ -71,6 +75,12 @@ public class FileController {
     private NFileTagRelationService nFileTagRelationService;
 
     @Autowired
+    private SocketIoService socketIoService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
     HttpServletResponse response;
 
     @ApiOperation("上传文件")
@@ -87,9 +97,16 @@ public class FileController {
     @PostMapping(value = "/uploadByBatch" ,headers = "content-type=multipart/form-data")
     public Result saveUpLoadFile(@RequestParam("file") MultipartFile[] files){
         List<NativeFile> resList=new LinkedList<>();
+        UserVo userVo = jwtUtils.validateToken();
+        List<Long> userIds=new LinkedList<>();
+        userIds.add(userVo.getUserId());
+        int fileId=1;
         for (MultipartFile file:files){
             NativeFile nativeFile = nativeFileService.saveFile(file);
             resList.add(nativeFile);
+            //向前端推送文件上传完成的消息
+            socketIoService.sendGroupMessage(fileId, SocketIoEvents.FILE_FINISH_UPLOAD,userIds);
+            fileId+=1;
         }
         return Result.success(resList);
     }

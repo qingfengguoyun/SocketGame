@@ -95,7 +95,7 @@ public class ImageUtils {
             String outputImagePath=storageFolder+strs[0]+"_preview."+"jpg";
             try {
                 Thumbnails.of(orgImage).scale(1f).toFile(outputImagePath);
-                Thumbnails.of(orgImage).scale(scale).outputQuality(0.4f).toFile(outputImagePath);
+                Thumbnails.of(orgImage).scale(scale).outputQuality(0.3f).toFile(outputImagePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -105,7 +105,7 @@ public class ImageUtils {
             String outputImageFileName=strs[0]+"_preview."+strs[1];
             String outputImagePath=storageFolder+strs[0]+"_preview."+strs[1];
             try {
-                Thumbnails.of(orgImage).scale(scale).outputQuality(0.4).toFile(outputImagePath);
+                Thumbnails.of(orgImage).scale(scale).outputQuality(0.3).toFile(outputImagePath);
             } catch (IOException e) {
                 e.printStackTrace();
             }

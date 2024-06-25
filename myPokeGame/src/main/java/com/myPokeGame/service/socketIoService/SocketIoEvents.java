@@ -9,4 +9,6 @@ public class SocketIoEvents {
     public final static String USER_ONLINE="user_online";
     public final static String USER_OFFLINE="user_offline";
 
+    public final static String FILE_FINISH_UPLOAD="file_finish_upload";
+
 }
