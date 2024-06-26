@@ -9,6 +9,8 @@ public class CorsConfig implements WebMvcConfigurer {
 
     static final String ORIGINS[] = new String[] { "GET", "POST", "PUT", "DELETE" };
 
+    static final String EXPOSED_HEADERS[] = new String[] {"token","Authorization","Content-Disposition"};
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 所有的当前站点的请求地址，都支持跨域访问。
@@ -18,6 +20,6 @@ public class CorsConfig implements WebMvcConfigurer {
                 .maxAge(3601)// 超时时长设置为1小时。 时间单位是秒。
                 //用于前端从header获取指定字段
                 //Content-Disposition用于文件下载时存储文件名
-                .exposedHeaders("token","Authorization","Content-Disposition"); //设置可被前端访问的header字段,"*"表示暴露所有header字段
+                .exposedHeaders(EXPOSED_HEADERS); //设置可被前端访问的header字段,"*"表示暴露所有header字段
     }
 }
