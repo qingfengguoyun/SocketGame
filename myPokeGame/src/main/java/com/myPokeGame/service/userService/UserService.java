@@ -18,6 +18,8 @@ public interface UserService {
 
     public List<User> queryAllUsers();
 
+    public List<User> queryAllUsersButAdmin();
+
     public User queryUserById(Long userId);
 
     public User updateUser(User user);

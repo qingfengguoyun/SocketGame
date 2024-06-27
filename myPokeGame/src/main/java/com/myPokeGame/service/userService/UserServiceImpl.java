@@ -1,5 +1,6 @@
 package com.myPokeGame.service.userService;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.myPokeGame.entity.User;
 import com.myPokeGame.exceptions.NativeException;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -33,6 +35,21 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @PostConstruct
+    public void InitAdmin(){
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getUserName,"admin");
+        User user = userMapper.selectOne(wrapper);
+        if(ObjectUtils.isEmpty(user)){
+            log.info("初始化管理员角色");
+            User admin = User.builder().userName("admin").password("123").date(new Date()).build();
+            userMapper.insert(admin);
+            log.info("管理员初始化完成");
+        }else{
+            log.info("已存在管理员角色");
+        }
+    }
 
 
     @Override
@@ -113,6 +130,15 @@ public class UserServiceImpl implements UserService {
 //            resList.add(vo);
 //        });
 //        return resList;
+    }
+
+    @Override
+    public List<User> queryAllUsersButAdmin() {
+
+        LambdaQueryWrapper<User> wrapper=new LambdaQueryWrapper<>();
+        wrapper.ne(User::getUserName,"admin");
+        List<User> users = userMapper.selectList(wrapper);
+        return users;
     }
 
     @Override

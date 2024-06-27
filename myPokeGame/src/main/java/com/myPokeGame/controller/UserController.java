@@ -75,7 +75,7 @@ public class UserController {
     @PostMapping("/queryAllUserStatus")
     public Result queryAllUserStatus(){
 //        List<String> names = userService.queryAllUserName();
-        List<User> users = userService.queryAllUsers();
+        List<User> users = userService.queryAllUsersButAdmin();
         List<UserVo> resList=new LinkedList<>();
         Set<Long> longs = onlineUserMap.keySet();
         users.stream().forEach(t->{
